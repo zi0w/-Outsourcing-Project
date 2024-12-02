@@ -1,10 +1,14 @@
 const Footer = () => {
   return (
+    // full-back
     <div className="bg-[#0a0a0a]">
+      {/* footer - inner */}
       <div className="mx-auto w-full max-w-[600px] h-[200px] p-[43px] text-center">
+        {/* copyright text */}
         <p className="mb-[20px] text-[#fff] text-[21px] font-medium">
           @ Copyright 2024 pa5rangers. All rights reserved
         </p>
+        {/* developer intro */}
         <ul className="flex justify-between mx-auto ">
           <li className>
             <p className="text-[#FF5555] font-medium">최민석</p>
