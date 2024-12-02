@@ -1,24 +1,37 @@
 import { Link, useNavigate } from 'react-router-dom';
-import Swal from "sweetalert2";
+import Swal from 'sweetalert2';
 
+import supabase from '../../supabase/supabase';
 import AuthForm from '../../components/features/AuthForm';
 
 const SigninPage = () => {
   const navigate = useNavigate();
 
-  const handleSignin = async (formData) => {
+  const handleSignin = async (formState) => {
+    const { email, password } = formState;
     try {
-      const { data } = await authApi.post('/login', formData);
+      const { user, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
 
-      if (data.success) {
-        
-        navigate('/');
+      if (error) {
+        throw new Error(error.message);
       }
+
+      Swal.fire({
+        icon: 'success',
+        title: '로그인 성공!'
+      });
+
+      navigate('/');
     } catch (error) {
+      console.error(error);
+
       Swal.fire({
         icon: 'error',
-        title: '로그인 실패',
-        text: `${error.message || error}`
+        title: '로그인 오류',
+        text: error
       });
     }
   };
