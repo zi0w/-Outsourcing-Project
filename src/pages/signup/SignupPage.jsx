@@ -1,33 +1,52 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+
+import supabase from '../../supabase/supabase';
 import AuthForm from '../../components/features/AuthForm';
 
 const SignupPage = () => {
   const navigate = useNavigate();
 
-  const handleSignup = async () => {
+  const handleSignup = async (formState) => {
+    const { email, password, nickname } = formState;
+    const defaultProfileImgUrl = 'https://i.pinimg.com/736x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg';
+
     try {
-      if (error) {
-        console.error('Sign Up Error:', error.message);
-        toast.error(`회원가입 실패: ${error.message}`);
-        return;
+      const { user, error: signupError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            nickname,
+            profile_image_url: defaultProfileImgUrl
+          }
+        }
+      });
+      if (signupError) {
+        throw new Error(signupError.message);
       }
-      if (data.success) {
-        Swal.fire({
-          icon: 'success',
-          title: '회원가입 되었습니다.'
-        });
-        navigate('/signin');
+
+      const { data: insertData, error: insertError } = await supabase.from('users').insert([
+        {
+          email,
+          nickname,
+          profile_image_url: defaultProfileImgUrl
+        }
+      ]);
+      if (insertError) {
+        throw new Error(insertError.message);
       }
+      Swal.fire({
+        icon: 'success',
+        title: '회원가입 되었습니다.'
+      });
+      navigate('/signin');
     } catch (error) {
       let errorMessage = '회원가입에 실패했습니다.';
-
-      if (error.response?.status === 409) {
-        errorMessage = '이미 사용 중인 이메일입니다.';
-      } else if (error.response?.data?.message) {
-        errorMessage = error.response.data.message;
+      if (error.message) {
+        errorMessage = error.message;
       }
-
+      console.log(error.message);
       Swal.fire({
         icon: 'error',
         title: '오류 발생',
