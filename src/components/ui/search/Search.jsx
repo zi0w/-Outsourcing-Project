@@ -1,18 +1,74 @@
+import { useQuery } from '@tanstack/react-query';
 import SearchMap from '../../features/SearchMap';
+import supabase from '../../../supabase/supabase';
+import { useState } from 'react';
+import SearchList from './SearchList';
 
 const Search = () => {
+  const [colorFilter, setColorFilter] = useState('all');
+  console.log(colorFilter);
+
+  const fetchRestaurantData = async () => {
+    const { data } = await supabase.from('restaurants').select('*');
+    return data;
+  };
+
+  const {
+    data: restaurants,
+    isPending,
+    error
+  } = useQuery({
+    queryKey: ['restaurants'],
+    queryFn: fetchRestaurantData
+  });
+
+  if (isPending) return <div>로딩 중...</div>;
+  if (error) {
+    console.error(error);
+    return <div>에러가 발생했습니다: {error.message}</div>;
+  }
+
+  // 버튼 클릭에 따라 컬러 필터 상태 변경
+  const handleColorType = (e) => {
+    setColorFilter(e.target.value);
+  };
+
+  // 상태에 따라 다르게 필터를 돌려 레스토랑 데이터 뽑기
+  const filterdRestaurants = () => {
+    switch (colorFilter) {
+      case 'all':
+        return restaurants;
+      case 'black':
+        return restaurants.filter((restaurant) => restaurant.color === 'black');
+      case 'white':
+        return restaurants.filter((restaurant) => restaurant.color === 'white');
+    }
+  };
+
   return (
-    <div className="bg-[#0E0E0E] ">
-      <div className="max-w-[1440px] w-full h-screen p-[40px] m-auto flex flex-row gap-[40px]">
+    <div className="bg-[#0E0E0E] h-screen">
+      <div className="max-w-[1440px] w-full h-full p-[40px] m-auto flex flex-row gap-[40px]">
         <div className="max-w-[520px] bg-[#F9F9F9] border rounded-[24px] h-full p-[20px] flex flex-col">
           <div className="flex flex-row gap-[8.35px] drop-shadow-md">
-            <button className="w-[50px] h-[20px] border border-black border-[2px] flex justify-center items-center text-[13px] rounded-[5px] bg-white">
+            <button
+              value={'all'}
+              onClick={handleColorType}
+              className="w-[50px] h-[20px] border border-black border-[2px] flex justify-center items-center text-[13px] rounded-[5px] bg-white"
+            >
               전체
             </button>
-            <button className="w-[50px] h-[20px] border border-black border-[2px] flex justify-center items-center text-[13px] rounded-[5px] bg-black text-white">
+            <button
+              value={'black'}
+              onClick={handleColorType}
+              className="w-[50px] h-[20px] border border-black border-[2px] flex justify-center items-center text-[13px] rounded-[5px] bg-black text-white"
+            >
               흑
             </button>
-            <button className="w-[50px] h-[20px] border border-black border-[1px] flex justify-center items-center text-[13px] rounded-[5px] bg-white">
+            <button
+              value={'white'}
+              onClick={handleColorType}
+              className="w-[50px] h-[20px] border border-black border-[1px] flex justify-center items-center text-[13px] rounded-[5px] bg-white"
+            >
               백
             </button>
             <span className="text-[13px]">으로 검색하기</span>
@@ -22,78 +78,9 @@ const Search = () => {
             <button className="bg-search-icon w-[24px] h-[24px]"></button>
           </div>
           <ul className="mt-[20px] flex flex-col gap-[20px] overflow-auto">
-            <li className="w-full h-[100px] border drop-shadow-md rounded-[16px] bg-white flex flex-row p-5 cursor-pointer transition-transform hover:-translate-y-1 duration-500 items-center justify-between">
-              <div>
-                <h2 className="font-bold text-lg text-gray-800 mb-1">남영탉</h2>
-                <p className="text-sm text-gray-600 break-words">서울 강남구 강남대로 123</p>
-                <p className="text-sm text-gray-600 break-words">02-333-1234</p>
-              </div>
-              <div>
-                <span className="border border-black rounded-full p-2 w-[30px] h-[30px] flex items-center justify-center bg-black text-white">
-                  >
-                </span>
-              </div>
-            </li>
-            <li className="w-full h-[100px] border drop-shadow-md rounded-[16px] bg-white flex flex-row p-5 cursor-pointer transition-transform hover:-translate-y-1 duration-500 items-center justify-between">
-              <div>
-                <h2 className="font-bold text-lg text-gray-800 mb-1">남영탉</h2>
-                <p className="text-sm text-gray-600 break-words">서울 강남구 강남대로 123</p>
-                <p className="text-sm text-gray-600 break-words">02-333-1234</p>
-              </div>
-              <div>
-                <span className="border border-black rounded-full p-2 w-[30px] h-[30px] flex items-center justify-center bg-black text-white">
-                  >
-                </span>
-              </div>
-            </li>
-            <li className="w-full h-[100px] border drop-shadow-md rounded-[16px] bg-white flex flex-row p-5 cursor-pointer transition-transform hover:-translate-y-1 duration-500 items-center justify-between">
-              <div>
-                <h2 className="font-bold text-lg text-gray-800 mb-1">남영탉</h2>
-                <p className="text-sm text-gray-600 break-words">서울 강남구 강남대로 123</p>
-                <p className="text-sm text-gray-600 break-words">02-333-1234</p>
-              </div>
-              <div>
-                <span className="border border-black rounded-full p-2 w-[30px] h-[30px] flex items-center justify-center bg-black text-white">
-                  >
-                </span>
-              </div>
-            </li>
-            <li className="w-full h-[100px] border drop-shadow-md rounded-[16px] bg-white flex flex-row p-5 cursor-pointer transition-transform hover:-translate-y-1 duration-500 items-center justify-between">
-              <div>
-                <h2 className="font-bold text-lg text-gray-800 mb-1">남영탉</h2>
-                <p className="text-sm text-gray-600 break-words">서울 강남구 강남대로 123</p>
-                <p className="text-sm text-gray-600 break-words">02-333-1234</p>
-              </div>
-              <div>
-                <span className="border border-black rounded-full p-2 w-[30px] h-[30px] flex items-center justify-center bg-black text-white">
-                  >
-                </span>
-              </div>
-            </li>
-            <li className="w-full h-[100px] border drop-shadow-md rounded-[16px] bg-white flex flex-row p-5 cursor-pointer transition-transform hover:-translate-y-1 duration-500 items-center justify-between">
-              <div>
-                <h2 className="font-bold text-lg text-gray-800 mb-1">남영탉</h2>
-                <p className="text-sm text-gray-600 break-words">서울 강남구 강남대로 123</p>
-                <p className="text-sm text-gray-600 break-words">02-333-1234</p>
-              </div>
-              <div>
-                <span className="border border-black rounded-full p-2 w-[30px] h-[30px] flex items-center justify-center bg-black text-white">
-                  >
-                </span>
-              </div>
-            </li>
-            <li className="w-full h-[100px] border drop-shadow-md rounded-[16px] bg-white flex flex-row p-5 cursor-pointer transition-transform hover:-translate-y-1 duration-500 items-center justify-between">
-              <div>
-                <h2 className="font-bold text-lg text-gray-800 mb-1">남영탉</h2>
-                <p className="text-sm text-gray-600 break-words">서울 강남구 강남대로 123</p>
-                <p className="text-sm text-gray-600 break-words">02-333-1234</p>
-              </div>
-              <div>
-                <span className="border border-black rounded-full p-2 w-[30px] h-[30px] flex items-center justify-center bg-black text-white">
-                  >
-                </span>
-              </div>
-            </li>
+            {filterdRestaurants().map((restaurant) => {
+              return <SearchList key={restaurant.id} restaurant={restaurant} />;
+            })}
           </ul>
         </div>
         <div className="max-w-[794px] w-[794px] bg-[#F9F9F9] h-full rounded-[24px]">

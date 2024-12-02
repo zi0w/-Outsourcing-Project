@@ -21,10 +21,10 @@ const SearchMap = () => {
   }, []);
 
   return (
-    <div>
+    <>
       {/* 지도가 표시될 영역 */}
-      <div id="map" style={{ width: '100%', height: 'screen', borderRadius: '24px' }}></div>
-    </div>
+      <div id="map" style={{ width: '100%', height: '100%', borderRadius: '24px' }}></div>
+    </>
   );
 };
 
