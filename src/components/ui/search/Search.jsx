@@ -1,8 +1,10 @@
+import SearchMap from '../../features/SearchMap';
+
 const Search = () => {
   return (
     <div className="bg-[#0E0E0E] ">
       <div className="max-w-[1440px] w-full h-screen p-[40px] m-auto flex flex-row gap-[40px]">
-        <div className="max-w-[520px] bg-[#F9F9F9] border rounded-[24px] h-full p-[20px]">
+        <div className="max-w-[520px] bg-[#F9F9F9] border rounded-[24px] h-full p-[20px] flex flex-col">
           <div className="flex flex-row gap-[8.35px] drop-shadow-md">
             <button className="w-[50px] h-[20px] border border-black border-[2px] flex justify-center items-center text-[13px] rounded-[5px] bg-white">
               전체
@@ -94,8 +96,8 @@ const Search = () => {
             </li>
           </ul>
         </div>
-        <div className="max-w-[794px] w-[794px] bg-red-200 h-full rounded-[24px]">
-          <h1></h1>
+        <div className="max-w-[794px] w-[794px] bg-[#F9F9F9] h-full rounded-[24px]">
+          <SearchMap />
         </div>
       </div>
     </div>
