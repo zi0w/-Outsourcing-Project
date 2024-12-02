@@ -7,8 +7,8 @@ const validateForm = (name, value, password) => {
       }
       break;
     case 'password':
-      if (value.length < 4 || value.length > 15) {
-        return '비밀번호는 4 ~ 15글자여야 합니다.';
+      if (value.length < 6 || value.length > 15) {
+        return '비밀번호는 6 ~ 15글자여야 합니다.';
       }
       break;
     case 'confirmPassword':
