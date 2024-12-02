@@ -1,7 +1,7 @@
 import validateForm from '../../utils/validateForm';
 import useForm from '../../hooks/useForm';
 
-function AuthForm({ mode, onSubmit }) {
+const AuthForm = ({ mode, onSubmit }) => {
   const { formState, formErrors, onChangeHandler, resetForm } = useForm(
     {
       email: '',
@@ -24,6 +24,9 @@ function AuthForm({ mode, onSubmit }) {
       return true;
     }
     if (mode === 'signup' && (!confirmPassword || !nickname)) {
+      return true;
+    }
+    if (formErrors.email || formErrors.password || formErrors.confirmPassword || formErrors.nickname) {
       return true;
     }
     return false;
@@ -111,6 +114,6 @@ function AuthForm({ mode, onSubmit }) {
       </button>
     </form>
   );
-}
+};
 
 export default AuthForm;
