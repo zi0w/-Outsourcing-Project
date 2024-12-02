@@ -4,7 +4,7 @@ const Header = () => {
   // navigate = useNavigate();
 
   return (
-    <header>
+    <header className='w-full bg-black'>
       <div className="w-full max-w-[1440px] h-[100px] mx-auto bg-black text-white flex flex-row justify-between items-center pr-[15px]">
         {/* logo */}
         <Link to="/" className="flex">
