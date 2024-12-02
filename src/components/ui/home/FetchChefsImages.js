@@ -15,22 +15,18 @@ const fetchImages = async (bucketName, limit = 20) => {
   // 파일 목록에서 각 파일의 공개 URL을 생성
   const imageUrls = data.map((item) => {
     const { data: publicUrlData } = storageBucket.getPublicUrl(item.name);
-    console.log(data);
-
     return publicUrlData.publicUrl; // 공개 URL 반환
   });
 
-  console.log(imageUrls);
+  // console.log(imageUrls);
   return imageUrls;
 };
 
 // React Query를 사용하여 이미지를 가져오는 커스텀 훅
-const useFetchImages = (bucketName, limit = 20) => {
+const useFetchImages = (bucketName) => {
   return useQuery({
-    queryKey: [bucketName, limit], // Query Key로 버킷 이름과 제한 값을 지정
-    queryFn: () => fetchImages(bucketName, limit), // Fetch 함수 호출
-    staleTime: 5 * 60 * 1000, // 데이터 캐싱 유지 시간 (5분)
-    refetchOnWindowFocus: false // 창 포커스 시 자동 새로고침 비활성화
+    queryKey: [bucketName], // Query Key로 버킷 이름과 제한 값을 지정
+    queryFn: () => fetchImages(bucketName), // Fetch 함수 호출
   });
 };
 

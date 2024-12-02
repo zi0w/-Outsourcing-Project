@@ -2,7 +2,7 @@ import React from 'react';
 import useFetchImages from './FetchChefsImages';
 
 const ChefTiles = ({ bucketName, title }) => {
-  const { data: images, isLoading, error } = useFetchImages(bucketName, 20);
+  const { data: images, isLoading, error } = useFetchImages(bucketName);
 
   if (isLoading) {
     return <p>Loading...</p>;
