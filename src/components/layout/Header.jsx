@@ -9,11 +9,11 @@ const Header = () => {
         {/* logo */}
         <Link to="/" className="flex">
           <h1 className="block w-16 h-16 bg-[url('/logo.png')] ml-[25px] bg-no-repeat bg-center bg-cover"></h1>
-          <span className="text-[34px] leading-[64px] ml-[12px] ">이븐한맛집</span>
+          <span className="text-[26px] leading-[64px] ml-[12px] ">이븐한맛집</span>
         </Link>
 
         {/* nav */}
-        <ul className="flex text-[26px]">
+        <ul className="flex text-[21px]">
           <li>
             {/* go to search page */}
             <Link to="/search" className="content-box p-[10px] hover:text-red-500">
