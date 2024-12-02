@@ -1,4 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
+import Swal from "sweetalert2";
+
 import AuthForm from '../../components/features/AuthForm';
 
 const SigninPage = () => {
