@@ -1,4 +1,34 @@
+import TeamInfo from './TeamInfo';
+
 const Footer = () => {
+  const teamMembersInfo = [
+    {
+      name: '최민석',
+      github: 'https://github.com/Noonsae',
+      color: '#FF5555'
+    },
+    {
+      name: '김민후',
+      github: 'https://github.com/kminhoo',
+      color: '#F66CC8'
+    },
+    {
+      name: '김민지',
+      github: 'https://github.com/minji7901',
+      color: '#ffff42'
+    },
+    {
+      name: '우지영',
+      github: 'https://github.com/zi0w',
+      color: '#53FF67'
+    },
+    {
+      name: '최강건',
+      github: 'https://github.com/Choi-kanggun',
+      color: '#455EFF'
+    }
+  ];
+
   return (
     // full-back
     <div className="bg-[#0a0a0a] w-full fixed bottom-0">
@@ -10,58 +40,9 @@ const Footer = () => {
         </p>
         {/* developer intro */}
         <ul className="flex justify-between text-[13px]">
-          <li className="flex flex-row justify-between items-center">
-            <a
-              target="blank"
-              href="https://github.com/Noonsae"
-              className="block w-[24px] h-[24px] mx-[5px] indent-[-9999rem] bg-[url('/github.png')] bg-no-repeat bg-center bg-cover rounded-[50%]"
-            >
-              dev.Noonsae's github
-            </a>
-            <p className="text-[#FF5555] font-medium">최민석</p>
-          </li>
-          <li className="flex flex-row justify-between items-center">
-            <a
-              target="blank"
-              href="https://github.com/kminhoo"
-              className="block w-[24px] h-[24px] mx-[5px] indent-[-9999rem] bg-[url('/github.png')] bg-no-repeat bg-center bg-cover rounded-[50%]"
-            >
-              dev.kminhoo's github
-            </a>
-            <p className="text-[#F66CC8]">김민후</p>
-          </li>
-          <li className="flex flex-row justify-between items-center">
-            <a
-              target="blank"
-              href="https://github.com/minji7901"
-              className="block w-[24px] h-[24px] mx-[5px] indent-[-9999rem] bg-[url('/github.png')] bg-no-repeat bg-center bg-cover rounded-[50%]"
-            >
-              dev.minji7901's github
-            </a>
-            <p className="text-[#ffff42]">김민지</p>
-          </li>
-          <li className="flex flex-row justify-between items-center">
-            <a
-              target="blank"
-              href="https://github.com/zi0w"
-              className="block w-[24px] h-[24px] mx-[5px] indent-[-9999rem] bg-[url('/github.png')] bg-no-repeat bg-center bg-cover rounded-[50%]"
-            >
-              {' '}
-              dev.zi0w's github
-            </a>
-            <p className="text-[#53FF67]">우지영</p>
-          </li>
-          <li className="flex flex-row justify-between items-center">
-            <a
-              target="blank"
-              href="https://github.com/Choi-kanggun"
-              className="block w-[24px] h-[24px] mx-[5px] indent-[-9999rem] bg-[url('/github.png')] bg-no-repeat bg-center bg-cover rounded-[50%]"
-            >
-              {' '}
-              dev.Choi-kanggun's github
-            </a>
-            <p className="text-[#455EFF]">최강건</p>
-          </li>
+          {teamMembersInfo.map((member) => (
+            <TeamInfo key={member.github} name={member.name} github={member.github} color={member.color} />
+          ))}
         </ul>
       </div>
     </div>
