@@ -2,7 +2,7 @@ import validateForm from '../../utils/validateForm';
 import useForm from '../../hooks/useForm';
 
 function AuthForm({ mode, onSubmit }) {
-  const { formState, onChangeHandler, resetForm, formErrors } = useForm(
+  const { formState, formErrors, onChangeHandler, resetForm } = useForm(
     {
       email: '',
       password: '',
@@ -17,6 +17,16 @@ function AuthForm({ mode, onSubmit }) {
     e.preventDefault();
     onSubmit(formState);
     resetForm();
+  };
+
+  const isDisabled = () => {
+    if (!email || !password) {
+      return true;
+    }
+    if (mode === 'signup' && (!confirmPassword || !nickname)) {
+      return true;
+    }
+    return false;
   };
 
   return (
@@ -51,7 +61,7 @@ function AuthForm({ mode, onSubmit }) {
           value={password}
           onChange={onChangeHandler}
           className="block w-full mt-1.5 p-3.5 text-xs rounded-lg"
-          placeholder="비밀번호를 입력해주세요."
+          placeholder={`${mode === 'signin' ? '비밀번호를 입력해주세요.' : '6 ~ 15글자의 비밀번호를 입력해주세요.'} `}
           required
         />
         {formErrors.password && <small className="text-[#FF5555]">{formErrors.password}</small>}
@@ -70,6 +80,7 @@ function AuthForm({ mode, onSubmit }) {
               onChange={onChangeHandler}
               className="block w-full mt-1.5 p-3.5 text-xs rounded-lg"
               placeholder="비밀번호를 다시 입력해주세요."
+              required
             />
             {formErrors.confirmPassword && <small className="text-[#FF5555]">{formErrors.confirmPassword}</small>}
           </div>
@@ -84,7 +95,7 @@ function AuthForm({ mode, onSubmit }) {
               value={nickname}
               onChange={onChangeHandler}
               className="block w-full mt-1.5 p-3.5 text-xs rounded-lg"
-              placeholder="닉네임을 2~10자 입력해주세요."
+              placeholder="2~10글자의 닉네임을 입력해주세요."
               required
             />
             {formErrors.nickname && <small className="text-[#FF5555]">{formErrors.nickname}</small>}
@@ -93,7 +104,8 @@ function AuthForm({ mode, onSubmit }) {
       )}
       <button
         type="submit"
-        className="block w-full mt-[18px] py-[10px] text-white rounded-[10px] bg-[#EC4C4C] shadow-[0_2px_2px_rgba(0,0,0,0.25)] hover:bg-[#B73838] transition"
+        className={`block w-full mt-[18px] py-[10px] text-white rounded-[10px] shadow-[0_2px_2px_rgba(0,0,0,0.25)] ${isDisabled() === true ? 'bg-[#B73838]' : 'bg-[#EC4C4C] hover:bg-[#B73838] transition'}`}
+        disabled={isDisabled()}
       >
         {mode === 'signin' ? '로그인' : '회원가입'}
       </button>
