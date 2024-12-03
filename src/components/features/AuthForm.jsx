@@ -107,7 +107,7 @@ const AuthForm = ({ mode, onSubmit }) => {
       )}
       <button
         type="submit"
-        className={`block w-full mt-[18px] py-[10px] text-white rounded-[10px] shadow-[0_2px_2px_rgba(0,0,0,0.25)] ${isDisabled() === true ? 'bg-[#B73838]' : 'bg-[#EC4C4C] hover:bg-[#B73838] transition'}`}
+        className={`block w-full mt-[18px] py-[10px] text-white rounded-[10px] shadow-[0_2px_2px_rgba(0,0,0,0.25)] ${isDisabled() === true ? 'bg-[#B73838]' : 'bg-[#EC4C4C] hover:bg-[#B73838] transition'}`}//회색
         disabled={isDisabled()}
       >
         {mode === 'signin' ? '로그인' : '회원가입'}
