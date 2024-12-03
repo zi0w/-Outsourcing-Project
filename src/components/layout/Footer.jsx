@@ -31,7 +31,8 @@ const Footer = () => {
 
   return (
     // full-back
-    <div className="bg-[#0a0a0a] w-full fixed bottom-0">
+
+    <footer className="bg-[#0a0a0a] w-full">
       {/* footer - inner */}
       <div className="mx-auto w-full max-w-[600px] h-[130px] pt-[30px] text-center">
         {/* copyright text */}
@@ -45,7 +46,7 @@ const Footer = () => {
           ))}
         </ul>
       </div>
-    </div>
+    </footer>
   );
 };
 
