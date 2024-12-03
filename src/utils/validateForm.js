@@ -1,6 +1,5 @@
 const validateForm = (name, value, password) => {
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
   switch (name) {
     case 'email':
       if (!emailPattern.test(value)) {
