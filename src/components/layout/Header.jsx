@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import DropDown from './DropDown';
 
 const Header = () => {
-  
   const isLoggedIn = false;
 
   return (
@@ -38,11 +37,7 @@ const Header = () => {
           </ul>
         </div>
       </header>
-      {isLoggedIn ? (
-        <DropDown/>
-      ) : (
-        <></>
-      )}
+      {isLoggedIn ? <DropDown /> : <></>}
     </>
   );
 };

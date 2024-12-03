@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TeamInfo = ({github, name, color}) => {
+const TeamInfo = ({ github, name, color }) => {
   return (
     <li className="flex flex-row justify-between items-center">
       <a

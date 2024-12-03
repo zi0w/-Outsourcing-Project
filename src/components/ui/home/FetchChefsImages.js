@@ -26,7 +26,7 @@ const fetchImages = async (bucketName) => {
 const useFetchImages = (bucketName) => {
   return useQuery({
     queryKey: [bucketName], // Query Key로 버킷 이름과 제한 값을 지정
-    queryFn: () => fetchImages(bucketName), // Fetch 함수 호출
+    queryFn: () => fetchImages(bucketName) // Fetch 함수 호출
   });
 };
 

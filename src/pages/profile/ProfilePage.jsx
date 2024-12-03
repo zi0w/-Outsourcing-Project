@@ -1,11 +1,10 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import supabase from '../../supabase/supabase';
+import defaultImg from '../../assets/images/profile/default_img.jpg';
 
 const ProfilePage = () => {
   const [tab, setTab] = useState('likes');
-  const [likes, setLikes] = useState([]);
-  const [comments, setComments] = useState([]);
   const [newProfileImg, setNewProfileImg] = useState('');
   const [newNickname, setNewNickname] = useState('');
 
@@ -15,6 +14,13 @@ const ProfilePage = () => {
     if (!file) {
       return;
     }
+
+    // 브라우저에서 업로드된 파일의 임시 URL 생성
+    const tempImgUrl = URL.createObjectURL(file);
+
+    // 낙관적으로 UI에 즉시 반영
+    setNewProfileImg(tempImgUrl);
+
     const { data } = await supabase.storage.from('profile_img').upload(`profile_img${Date.now()}.png`, file);
     const newImg = `https://zvnqewxnkcdqqlskzqlz.supabase.co/storage/v1/object/public/profile_img/${data.path}`;
     setNewProfileImg(newImg);
@@ -30,7 +36,7 @@ const ProfilePage = () => {
     const { error } = await supabase
       .from('users')
       .update({
-        profile_image_url: newProfileImg || 'https://i.pinimg.com/736x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg',
+        profile_image_url: newProfileImg,
         nickname: newNickname
       })
       .eq('id', currentUserId);
@@ -38,17 +44,85 @@ const ProfilePage = () => {
     if (error) console.error(error);
   };
 
-  const fetchLikes = async (currentUserId) => {
-    const { data: likes, error } = await supabase.from('likes').select('*').eq('user_id', currentUserId);
-    if (error) console.error(error);
-    return likes;
+  const handleCommentDelete = async (CommentId) => {
+    const { error } = await supabase.from('comments').delete().eq('user_id', CommentId);
   };
 
-  const fetchComments = async (currentUserId) => {
-    const { data: comments, error } = await supabase.from('comments').select('*').eq('user_id', currentUserId);
-    if (error) console.error(error);
-    return comments;
+  const handleLikeDelete = async (LikeId) => {
+    const { error } = await supabase.from('likes').delete().eq('user_id', LikeId);
   };
+
+  const fetchLikes = async ({ queryKey }) => {
+    const [_, userId] = queryKey;
+    const { data: likes, error } = await supabase.from('likes').select('*').eq('user_id', userId);
+    if (error) {
+      console.error(error);
+      return [];
+    }
+
+    const getLikeRestaurants = await Promise.all(
+      likes.map(async (like) => {
+        const { data: restaurants, error: restaurantsError } = await supabase
+          .from('restaurants')
+          .select('*')
+          .eq('id', like.restaurant_id)
+          .single();
+
+        if (restaurantsError) {
+          console.error(restaurantsError);
+          return { ...like, restaurant: null }; //
+        }
+        return { ...like, restaurants };
+      })
+    );
+    return getLikeRestaurants;
+  };
+
+  const {
+    data: likes,
+    isPending: likesPending,
+    isError: likesError
+  } = useQuery({
+    queryKey: ['likesRestaurants', 'e34dc365-0881-4c34-97f1-deca8267e365'],
+    queryFn: fetchLikes
+  });
+
+  const fetchComments = async ({ queryKey }) => {
+    const [_, userId] = queryKey;
+    const { data: comments, error } = await supabase.from('comments').select('*').eq('user_id', userId);
+    if (error) {
+      console.error(error);
+      return [];
+    }
+    console.log(comments);
+    const getRestaurantComments = await Promise.all(
+      comments.map(async (comment) => {
+        const { data: restaurant, error: restaurantError } = await supabase
+          .from('restaurants')
+          .select('*')
+          .eq('id', comment.restaurant_id)
+          .single();
+
+        if (restaurantError) {
+          console.error(restaurantError);
+          return { ...comment, restaurant: null };
+        }
+
+        console.log(comment);
+        return { ...comment, restaurant };
+      })
+    );
+    return getRestaurantComments;
+  };
+
+  const {
+    data: comments,
+    isPending: commentsPending,
+    isError: commentsError
+  } = useQuery({
+    queryKey: ['getRestaurantComments', '073b37db-9e7a-4d24-a2fd-7bfae432ae33'],
+    queryFn: fetchComments
+  });
 
   // 로그인 유저 정보 가져오기
   // const getUerData = async () => {
@@ -71,97 +145,180 @@ const ProfilePage = () => {
   // }
 
   // console.log('유저 데이터:', data);
+  const formatCustomDateTime = (writingTime) => {
+    const date = new Date(writingTime);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  };
+
+  useEffect(() => {
+    let tempUrl;
+    // newProfileImg가 file객체인 경우 URL 생성
+    if (newProfileImg instanceof File) {
+      tempUrl = URL.createObjectURL(newProfileImg);
+    }
+
+    // 언마운트 시, 메모리 해제
+    return () => {
+      if (tempUrl) {
+        URL.revokeObjectURL(tempUrl);
+      }
+    };
+  }, [newProfileImg]);
 
   return (
-    <section className="h-[calc(100vh-300px)] bg-white flex-col items-center">
-      <div>
-        <img
-          src="https://i.pinimg.com/736x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg"
-          alt="프로필 사진"
-          className="w-[138px] h-[138px] mx-auto rounded-full"
-        />
-        <h1 className="text-black text-center mt-[20px] text-[24px]">닉네임</h1>
+    <section className="h-[calc(100vh-230px)] text-white bg-gray-600 flex-col items-center">
+      <div className="text-center">
+        <img src={newProfileImg || defaultImg} alt="프로필 사진" className="w-[138px] h-[138px] mx-auto rounded-full" />
+        <h1 className="text-black mt-[20px] text-white font-bold text-[24px]">닉네임</h1>
       </div>
+
       {/* nav */}
-      <div className="flex text-white mx-auto w-[900px] my-[30px] bg-gray-700 rounded-[38px]">
+      <div className="flex text-white mx-auto w-[900px] my-[30px] rounded-[38px] font-semibold">
         <button
-          className="w-[400px] py-3 text-center hover:bg-gray-600 rounded-s-[38px]"
+          className={`w-[400px] py-3 rounded-s-[38px] text-center hover:bg-[#2B2B2B] ${tab === 'likes' ? 'bg-[#2B2B2B]' : 'bg-[#070707]'}`}
           onClick={() => setTab('likes')}
         >
           좋아요 한 매장
         </button>
-        <button className="w-[400px] py-3 text-center hover:bg-gray-600" onClick={() => setTab('comments')}>
+        <button
+          className={`w-[400px] py-3 text-center hover:bg-[#2B2B2B] ${tab === 'comments' ? 'bg-[#2B2B2B]' : 'bg-[#070707]'}`}
+          onClick={() => setTab('comments')}
+        >
           리뷰
         </button>
         <button
-          className="w-[400px] py-3 text-center hover:bg-gray-600 rounded-e-[38px]"
+          className={`w-[400px] py-3 text-center hover:bg-[#2B2B2B] rounded-e-[38px] ${tab === 'profile' ? 'bg-[#2B2B2B]' : 'bg-[#070707]'}`}
           onClick={() => setTab('profile')}
         >
           프로필 변경
         </button>
       </div>
+
       {/* content */}
-      {tab === 'likes' && (
-        <ul>
-          {likes.length > 0 ? (
-            likes.map((like) => (
-              <li key={like.id} className="flex justify-between items-center">
-                <div>
-                  <img
-                    src="https://i.pinimg.com/736x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg"
-                    alt="프로필 사진"
-                  />
-                  <div>
-                    <h1>매장이름</h1>
-                    <span>주소입니다.</span>
-                  </div>
-                </div>
-                <div>
-                  <span>영업시간</span>
-                  <img alt="삭제 버튼" />
-                </div>
-              </li>
-            ))
-          ) : (
-            <p>좋아요 한 매장이 없습니다.</p>
-          )}
-        </ul>
-      )}
-      {tab === 'comments' && (
-        <ul>
-          {comments.length > 0 ? (
-            comments.map((review) => (
-              <li key={review.id}>
-                <div>
-                  <img
-                    src="https://i.pinimg.com/736x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg"
-                    alt="프로필 사진"
-                  />
-                  <div>
-                    <h1>매장이름</h1>
-                    <span>리뷰입니다.</span>
-                  </div>
-                </div>
-                <div>
-                  <span>타임스탬프</span>
-                  <img />
-                </div>
-              </li>
-            ))
-          ) : (
-            <h1>리뷰없음</h1>
-          )}
-        </ul>
-      )}
-      {tab === 'profile' && (
-        <form onSubmit={handleSubmit}>
-          <label>닉네임 변경</label>
-          <input type="text" value={newNickname} onChange={(e) => setNewNickname(e.target.value)} />
-          <label>프로필 이미지 변경</label>
-          <input type="file" onChange={(e) => handleImageChange(e.target.files)}></input>
-          <button type="submit">변경하기</button>
-        </form>
-      )}
+      <div className="flex justify-center text-center mx-auto ">
+        {tab === 'likes' && (
+          <>
+            {likesPending ? (
+              <p className="font-semibold">로딩 중..</p>
+            ) : likesError ? (
+              <p className="font-semibold">북마크 데이터를 가져오는 중 에러가 발생하였습니다.</p>
+            ) : (
+              <div className="overflow-y-scroll h-[300px]">
+                <ul className="">
+                  {likes.length > 0 ? (
+                    likes.map((like) => (
+                      <li
+                        key={like.id}
+                        className="w-[700px] p-5 flex flex-col items-start rounded-xl my-5 text-black bg-white"
+                      >
+                        <div className="flex items-center">
+                          <img src={newProfileImg || defaultImg} className="w-12 h-12 rounded-full" alt="프로필 사진" />
+                          <div className="pl-3 flex flex-col justify-start">
+                            <h1 className="font-semibold text-start">{like.restaurants?.name}</h1>
+                            <p>{like.restaurants?.address}</p>
+                          </div>
+                        </div>
+                        <div className="flex w-full justify-between pl-[60px] mt-2">
+                          {like.restaurants?.operating_time.length > 1 ? (
+                            <div className="flex gap-3">
+                              <p>평일:{like.restaurants?.operating_time[0]}</p>
+                              <p>주말:{like.restaurants?.operating_time[1]}</p>
+                            </div>
+                          ) : (
+                            <p>평일,주말:{like.restaurants?.operating_time[0]}</p>
+                          )}
+                          <button type="button" onClick={handleLikeDelete(like.id)}>
+                            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" className="w-5">
+                              <path d="M432 80h-82.38l-34-56.75C306.1 8.827 291.4 0 274.6 0H173.4C156.6 0 141 8.827 132.4 23.25L98.38 80H16C7.125 80 0 87.13 0 96v16C0 120.9 7.125 128 16 128H32v320c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V128h16C440.9 128 448 120.9 448 112V96C448 87.13 440.9 80 432 80zM171.9 50.88C172.9 49.13 174.9 48 177 48h94c2.125 0 4.125 1.125 5.125 2.875L293.6 80H154.4L171.9 50.88zM352 464H96c-8.837 0-16-7.163-16-16V128h288v320C368 456.8 360.8 464 352 464zM224 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S208 183.2 208 192v208C208 408.8 215.2 416 224 416zM144 416C152.8 416 160 408.8 160 400V192c0-8.844-7.156-16-16-16S128 183.2 128 192v208C128 408.8 135.2 416 144 416zM304 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S288 183.2 288 192v208C288 408.8 295.2 416 304 416z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <p className="text-center">좋아요 한 매장이 없습니다.</p>
+                  )}
+                </ul>
+              </div>
+            )}
+          </>
+        )}
+        {tab === 'comments' && (
+          <>
+            {commentsPending ? (
+              <p className="font-semibold">로딩 중..</p>
+            ) : commentsError ? (
+              <p className="font-semibold">댓글 불러오기 오류 발생..</p>
+            ) : (
+              <div className="overflow-y-scroll h-[280px]">
+                <ul>
+                  {comments.length > 0 ? (
+                    comments.map((comment) => (
+                      <li
+                        key={comment.id}
+                        className="w-[700px] p-5 flex flex-col items-start rounded-xl my-5 text-black bg-white"
+                      >
+                        <div className="flex flex-row justify-start">
+                          <img src={newProfileImg || defaultImg} className="w-12 h-12 rounded-full" alt="프로필 사진" />
+                          <div className="pl-3 flex flex-col justify-start">
+                            <h1 className="font-semibold text-start">{comment.restaurant?.name}</h1>
+                            <p>{comment.comment}</p>
+                          </div>
+                        </div>
+                        <div className="w-full flex justify-between pl-[60px] mt-2">
+                          <p>{formatCustomDateTime(comment.created_at)}</p>
+                          <button type="button" onClick={handleCommentDelete(comment.id)}>
+                            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" className="w-5">
+                              <path d="M432 80h-82.38l-34-56.75C306.1 8.827 291.4 0 274.6 0H173.4C156.6 0 141 8.827 132.4 23.25L98.38 80H16C7.125 80 0 87.13 0 96v16C0 120.9 7.125 128 16 128H32v320c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V128h16C440.9 128 448 120.9 448 112V96C448 87.13 440.9 80 432 80zM171.9 50.88C172.9 49.13 174.9 48 177 48h94c2.125 0 4.125 1.125 5.125 2.875L293.6 80H154.4L171.9 50.88zM352 464H96c-8.837 0-16-7.163-16-16V128h288v320C368 456.8 360.8 464 352 464zM224 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S208 183.2 208 192v208C208 408.8 215.2 416 224 416zM144 416C152.8 416 160 408.8 160 400V192c0-8.844-7.156-16-16-16S128 183.2 128 192v208C128 408.8 135.2 416 144 416zM304 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S288 183.2 288 192v208C288 408.8 295.2 416 304 416z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <h1>등록한 리뷰가 없습니다.</h1>
+                  )}
+                </ul>
+              </div>
+            )}
+          </>
+        )}
+        {tab === 'profile' && (
+          <form onSubmit={handleSubmit} className="space-y-4 rounded-xl flex flex-col items-center">
+            <div className="w-[500px] flex flex-col items-start">
+              <label className="text-sm font-medium">닉네임 변경</label>
+              <input
+                type="text"
+                value={newNickname}
+                placeholder="변경하실 닉네임을 입력해주세요."
+                className="mt-1 block w-full bg-white border border-gray-700 rounded-lg p-2"
+                onChange={(e) => setNewNickname(e.target.value)}
+              />
+            </div>
+            <div className="w-[500px] flex flex-col items-start">
+              <label className="text-sm font-medium">프로필 이미지 변경</label>
+              <input
+                type="file"
+                className="mt-1 block w-[250px] text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-700 file:text-gray-300 hover:file:bg-gray-600"
+                onChange={(e) => handleImageChange(e.target.files)}
+              ></input>
+            </div>
+            <button
+              type="submit"
+              className="w-[200px] bg-[#EC4C4C] text-white py-2 rounded-lg hover:bg-red-500 font-semibold"
+            >
+              변경 하기
+            </button>
+          </form>
+        )}
+      </div>
     </section>
   );
 };

@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const DropDown = () => {
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [user, setUser] = useState(null);
-  
+
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
