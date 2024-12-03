@@ -2,8 +2,12 @@ import CommentBox from './CommentBox';
 
 import useComments from '../../../hooks/useComments';
 
+import useAuthStore from '../../../store/authStore';
+
 const Comments = ({ id }) => {
   const { restaurantComments, isPending, isError } = useComments(id);
+
+  const isLogin = useAuthStore((state) => state.isLogin);
 
   if (isPending) {
     return <div>로딩 중..</div>;
@@ -14,7 +18,13 @@ const Comments = ({ id }) => {
   }
 
   return (
-    <div className="mt-[30px] border-t-2 border-[#AAAAAA] ">
+    <div
+      className={`mt-8 border-t-2 border-[#AAAAAA]  ${
+        !isLogin
+          ? 'after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[50%] after:backdrop-blur-[3px]'
+          : ''
+      }`}
+    >
       <div
         className="p-2 flex flex-col gap-[27px] mt-[8px] max-h-[250px] overflow-y-auto [&::-webkit-scrollbar]:w-2
       [&::-webkit-scrollbar-track]:bg-gray-100

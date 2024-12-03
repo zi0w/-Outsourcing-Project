@@ -18,7 +18,7 @@ const CommentForm = ({ id }) => {
       Swal.fire({
         icon: 'info',
         title: '댓글을 입력해 해주세요.',
-        text: '로그인 이후에 리뷰를 남길 수 있습니다.'
+        text: '매장에 리뷰를 입력해 주세요.'
       });
 
       return;

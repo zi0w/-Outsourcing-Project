@@ -13,7 +13,7 @@ const Detail = () => {
           <div className="max-w-[520px] w-full flex flex-col gap-[40px]">
             <RestaurantInfo id={'0c67a5e8-eef2-4995-a5bf-a14d6910ad0a'} />
 
-            <div className="w-full h-[760px] rounded-[24px] px-[40px] pt-[38.12px] pb-[35.77px] bg-white overflow-hidden">
+            <div className="w-full h-[760px] rounded-[24px] px-[40px] pt-[38.12px] pb-[35.77px] bg-white overflow-hidden relative">
               <CommentForm id={'0c67a5e8-eef2-4995-a5bf-a14d6910ad0a'} />
               <Comments id={'0c67a5e8-eef2-4995-a5bf-a14d6910ad0a'} />
             </div>

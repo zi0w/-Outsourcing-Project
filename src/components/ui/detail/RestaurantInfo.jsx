@@ -1,92 +1,25 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import supabase from '../../../supabase/supabase';
 import Swal from 'sweetalert2';
+
 import useAuthStore from '../../../store/authStore';
 
-const RestaurantInfo = ({ id }) => {
-  const queryClient = useQueryClient();
+import useLike from '../../../hooks/useLike';
 
+const RestaurantInfo = ({ id }) => {
   const user = useAuthStore((state) => state.user);
 
-  const getRestaurantData = async (id) => {
-    let { data: restaurants, error } = await supabase.from('restaurants').select('*').eq('id', id).single();
-    return restaurants;
-  };
+  const { restaurants, isPending, isError, liked, handleUpdateLike } = useLike(id, user);
 
-  const { data, isPending, isError } = useQuery({
-    queryKey: ['restaurant', id],
-    queryFn: () => getRestaurantData(id)
-  });
-
-  const getLikesData = async () => {
-    let { data: likes, error } = await supabase.from('likes').select('*').eq('restaurant_id', id);
-    return likes;
-  };
-
-  const { data: likes } = useQuery({
-    queryKey: ['like', id],
-    queryFn: getLikesData
-  });
-
-  const liked = likes?.some((like) => like.user_id === user.id); // 이미 좋아요 했는지 여부
-
-  const handleInsertlike = async (userId, restaurantId) => {
-    if (liked) {
-      const { data, error } = await supabase
-        .from('likes')
-        .delete()
-        .eq('user_id', user.id)
-        .eq('restaurant_id', restaurantId);
-      return data;
+  const handleLikeUpdate = () => {
+    if (!user) {
+      Swal.fire({
+        icon: 'info',
+        title: '로그인 후 좋아요를 눌러주세요.',
+        text: '로그인/회원가입을 통해 즐겨보세요.'
+      });
     } else {
-      const { data, error } = await supabase
-        .from('likes')
-        .insert([{ user_id: user.id, restaurant_id: restaurantId }])
-        .select();
-      return data;
+      handleUpdateLike();
     }
   };
-
-  const { mutate: handleUpdateLike } = useMutation({
-    mutationFn: () => handleInsertlike(user.id, id),
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['like', id] });
-
-      const previousLikes = queryClient.getQueryData(['like', id]);
-
-      if (!liked) {
-        queryClient.setQueryData(['like', id], (old) => old.filter((like) => like.user_id !== user.id));
-      } else {
-        queryClient.setQueryData(['like', id], (old) => [
-          ...old,
-          {
-            id: Date.now().toString(),
-            user_id: user.id,
-            restaurant_id: id,
-            created_at: new Date()
-          }
-        ]);
-      }
-
-      return { previousLikes };
-    },
-    onError: (err, _, context) => {
-      queryClient.setQueryData(['like', id], context.previousLikes);
-      Swal.fire({
-        icon: 'error',
-        title: '매장 좋아요를 실패했습니다.',
-        text: '잠시 후 다시 시도해주세요.'
-      });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['like', id] });
-      Swal.fire({
-        icon: 'success',
-        title: liked ? '좋아요가 취소되었습니다.' : '매장 좋아요를 성공했습니다.',
-        text: '마이페이지에서 좋아요한 매장을 확인할 수 있습니다.'
-      });
-    }
-  });
 
   if (isPending) {
     return <div>로딩 중..</div>;
@@ -99,15 +32,15 @@ const RestaurantInfo = ({ id }) => {
   return (
     <div className="w-full h-[200px] rounded-[24px] bg-red-200">
       <div className="ml-[40px] p-2 flex flex-col gap-[5px] relative">
-        <EmptyHeart liked={liked} onClick={handleUpdateLike} />
-        <h3 className="text-lg font-[600]">{data.name}</h3>
-        <p className="text-[12px]">{data.chef_name} 셰프</p>
-        <p className="text-[12px]">주소 : {data.address}</p>
-        <p className="text-[12px]">브레이크 타임: {data.break_time ? data.break_time : '없음'}</p>
-        {data.day_off.length > 0 ? (
+        <EmptyHeart liked={liked} onClick={handleLikeUpdate} />
+        <h3 className="text-lg font-[600]">{restaurants.name}</h3>
+        <p className="text-[12px]">{restaurants.chef_name} 셰프</p>
+        <p className="text-[12px]">주소 : {restaurants.address}</p>
+        <p className="text-[12px]">브레이크 타임: {restaurants.break_time ? restaurants.break_time : '없음'}</p>
+        {restaurants.day_off.length > 0 ? (
           <p className="text-[12px]">
             휴무 :
-            {data.day_off.map((day, index) => (
+            {restaurants.day_off.map((day, index) => (
               <span className="mx-1" key={index}>
                 {day},
               </span>
@@ -116,12 +49,12 @@ const RestaurantInfo = ({ id }) => {
         ) : (
           <p className="text-[12px]">휴무 없음</p>
         )}
-        {data.operating_time.length > 1 ? (
+        {restaurants.operating_time.length > 1 ? (
           <p className="text-[12px]">
-            평일 : {data.operating_time[0]}, 주말 : {data.operating_time[1]}
+            평일 : {restaurants.operating_time[0]}, 주말 : {restaurants.operating_time[1]}
           </p>
         ) : (
-          <p className="text-[12px]">평일.주말 : {data.operating_time[0]}</p>
+          <p className="text-[12px]">평일.주말 : {restaurants.operating_time[0]}</p>
         )}
       </div>
     </div>

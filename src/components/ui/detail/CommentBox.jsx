@@ -67,7 +67,7 @@ const CommentBox = ({ comment }) => {
             </>
           )}
         </div>
-        {userData.id === user.id && (
+        {userData?.id === user?.id && (
           <div className="mt-[8px] flex gap-2 items-center justify-end">
             <button
               onClick={handleCommentUpdate}
