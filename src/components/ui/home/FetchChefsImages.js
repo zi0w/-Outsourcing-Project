@@ -2,10 +2,10 @@ import { useQuery } from '@tanstack/react-query';
 import supabase from '../../../supabase/supabase';
 
 // Supabase Storage에서 이미지를 가져오는 함수
-const fetchImages = async (bucketName, limit = 20) => {
+const fetchImages = async (bucketName) => {
   // Supabase에서 버킷의 파일 목록을 가져옴
   const storageBucket = supabase.storage.from(bucketName);
-  const { data, error } = await storageBucket.list('', { limit });
+  const { data, error } = await storageBucket.list('');
 
   // 에러 처리
   if (error) {
