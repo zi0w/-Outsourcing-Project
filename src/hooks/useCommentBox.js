@@ -30,7 +30,7 @@ const useCommentBox = (comment, user) => {
     if (error) {
       Swal.fire({
         icon: 'error',
-        title: '데이터를 가져오는데 실패했습니다..',
+        title: '데이터를 가져오는데 실패했습니다.',
         text: '잠시 후 다시 시도해 주세요.'
       });
 

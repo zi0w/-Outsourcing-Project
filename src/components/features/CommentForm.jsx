@@ -1,69 +1,15 @@
-import { useState } from 'react';
-
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
 import Swal from 'sweetalert2';
 
-import supabase from '../../supabase/supabase';
 import useAuthStore from '../../store/authStore';
+
+import useCommentForm from '../../hooks/useCommentForm';
 
 const CommentForm = ({ id }) => {
   const isLogin = useAuthStore((state) => state.isLogin);
 
   const user = useAuthStore((state) => state.user);
 
-  const queryClient = useQueryClient();
-
-  const [comment, setComment] = useState('');
-
-  const handleChange = (e) => {
-    setComment(e.target.value);
-  };
-
-  const handleSubmit = async (review) => {
-    const { data, error } = await supabase
-      .from('comments')
-      .insert([{ user_id: user.id, restaurant_id: id, comment: review }])
-      .select();
-
-    return data;
-  };
-
-  const { mutate: handleCommentSubmit } = useMutation({
-    mutationFn: (comment) => handleSubmit(comment),
-    onMutate: async (newComment) => {
-      await queryClient.cancelQueries({ queryKey: ['comments', id] });
-
-      const previousComments = queryClient.getQueryData(['comments', id]);
-      queryClient.setQueryData(['comments', id], (old) => [
-        ...old,
-        {
-          id: Date.now().toString(),
-          user_id: user.id,
-          restaurant_id: id,
-          comment: newComment,
-          created_at: new Date()
-        }
-      ]);
-      return { previousComments };
-    },
-    onError: (err, newComment, context) => {
-      queryClient.setQueriesData(['comments', id], context.previousComments);
-      Swal.fire({
-        icon: 'error',
-        title: '댓글 작성에 실패하셨습니다.',
-        text: '댓글을 다시 작성하세요.'
-      });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', id] });
-      Swal.fire({
-        icon: 'success',
-        title: '댓글을 작성했습니다.',
-        text: '댓글작성을 성공했습니다.'
-      });
-    }
-  });
+  const { comment, setComment, handleChange, handleCommentSubmit } = useCommentForm(id, user);
 
   const handleSubmitForm = (e) => {
     e.preventDefault();

@@ -24,11 +24,17 @@ const changeAddress = (address, name, description, phoneNumber, ref) => {
       marker.setMap(map);
 
       let content = `
-        <div class="map-overlay">
-          <div id="close">&#128473;</div>
-          <h4 class="name">${name}</h4>
-          <p class="desc">${description}</p>
-          <a href=${`tel: ${phoneNumber}`} class="phone-number">&#128222; : ${phoneNumber}</a>
+        <div style="width: 16rem; padding: .75rem; background: white; border: .5rem; border-radius: .5rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: .5rem;">
+            <h3 style="font-weight: 600; font-size: 1.125rem; font-color: #1F2937; line-height: 1.75rem">${name}</h3>
+            <div id="close-overlay" style="font-weight: 700; cursor: pointer; padding: 0px 10px;">&#10005;</div>
+          </div>
+          <div style="font-color:#4B5563;">
+            <p style="margin-bottom: .1rem; font-size: .875rem; overflow-wrap: break-word; text-wrap: wrap; word-break: keep-all;">${description}</p>
+          </div>
+          <button style="width:100%; margin-top:.75rem; border-radius: .5rem; background-color:black; text-align: center; padding: .5rem 1rem .5rem 1rem; color:white; cursor: pointer;">
+             <a href=${`tel: ${phoneNumber}`} class="phone-number" style="margin-top: 5px; color: white; font-size: 14px; transition: all ease-in 0.2s">&#128222; : ${phoneNumber}</a>
+          </button>
         </div>
       `;
 
@@ -46,7 +52,7 @@ const changeAddress = (address, name, description, phoneNumber, ref) => {
         customOverlay.setMap(map);
       });
 
-      document.querySelector('#close').addEventListener('click', () => {
+      document.querySelector('#close-overlay').addEventListener('click', () => {
         customOverlay.setMap(null);
       });
     }
