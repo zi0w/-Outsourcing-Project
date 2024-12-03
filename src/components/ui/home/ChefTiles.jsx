@@ -77,13 +77,13 @@ const ChefTiles = ({ restaurantInfo, color }) => {
                   <img src={info.image_url} alt={`${info.name}`} className="w-full h-full object-cover scale-110" />
                 </div>
               </div>
-              <div className="absolute top-4 left-8 w-[320px] h-[320px] bg-[rgba(0,0,0,0.7)] rounded-[16px] px-10 text-[#fff] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                 <Link to={`/details/${info.id}`}>
+              <div className="absolute top-4 left-8 w-[320px] h-[320px] bg-[rgba(0,0,0,0.7)] rounded-[8px] px-10 text-[#fff] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                   <div className="w-full h-auto mt-20">
                     <p className="text-[16px]">{info.description}</p>
                   </div>
-                </Link>
               </div>
+                </Link>
               <h3 className={`text-center text-[21px] ${color === 'black' ? `font-bold` : `font-medium`}`}>
                 {info.name}
               </h3>
