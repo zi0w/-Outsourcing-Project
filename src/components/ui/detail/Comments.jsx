@@ -6,7 +6,11 @@ import CommentBox from './CommentBox';
 
 const Comments = ({ id }) => {
   const getCommentDatas = async (restaurantId) => {
-    let { data } = await supabase.from('comments').select('*').eq('restaurant_id', restaurantId);
+    let { data } = await supabase
+      .from('comments')
+      .select('*')
+      .eq('restaurant_id', restaurantId)
+      .order('created_at', { ascending: false });
 
     return data;
   };

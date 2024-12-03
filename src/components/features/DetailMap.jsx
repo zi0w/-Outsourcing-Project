@@ -1,31 +1,13 @@
 import { useEffect, useRef } from 'react';
-import supabase from '../../supabase/supabase';
-import { useQuery } from '@tanstack/react-query';
+
+import useDetailMap from '../../hooks/useDetailMap';
 
 import changeAddress from '../../utils/changeAddress';
 
 const DetailMap = ({ id }) => {
   const mapRef = useRef(null);
 
-  const getRestorantAddress = async (restaurantId) => {
-    const { data, error } = await supabase
-      .from('restaurants')
-      .select('name, address, description')
-      .eq('id', restaurantId)
-      .single();
-
-    return data;
-  };
-  const {
-    data: mapData,
-    isPending,
-    isError
-  } = useQuery({
-    queryKey: ['map', id],
-    queryFn: () => getRestorantAddress(id)
-  });
-
-  console.log(mapData);
+  const { mapData, isPending, isError } = useDetailMap(id);
 
   useEffect(() => {
     if (mapData?.address && mapRef.current) {

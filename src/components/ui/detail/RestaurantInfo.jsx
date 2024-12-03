@@ -134,7 +134,7 @@ const EmptyHeart = ({ liked, onClick }) => {
   return (
     <svg
       onClick={() => onClick()}
-      fill={liked ? 'red' : null}
+      fill={liked ? 'red' : 'white'}
       className="w-[30px] h-30px absolute top-3 right-3 cursor-pointer"
       id="Layer_1_1_"
       version="1.1"
