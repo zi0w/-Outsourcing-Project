@@ -1,5 +1,3 @@
-import React from 'react';
-
 const SignupFormField = ({ id, label, type, value, onChange, placeholder, error }) => {
   return (
     <div className="mb-2.5">
