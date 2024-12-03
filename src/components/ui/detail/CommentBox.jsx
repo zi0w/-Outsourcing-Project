@@ -150,7 +150,6 @@ const CommentBox = ({ userId, comment }) => {
               <p className="text-sm">{comment.comment}</p>
             </>
           )}
-          {/* // <p className="text-sm">{comment.comment}</p> */}
         </div>
         {userData.id === userId && (
           <div className="mt-[8px] flex gap-2 items-center justify-end">
