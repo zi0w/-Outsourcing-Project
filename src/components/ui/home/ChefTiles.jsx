@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
@@ -7,16 +7,17 @@ import filterRestaurantInfo from './filterRestaurantInfo';
 
 const ChefTiles = ({ restaurantInfo, color }) => {
   const filteredInfo = filterRestaurantInfo(restaurantInfo, color);
+  const [currentRestaurant, setCurrentRestaurant] = useState(null);
+  // 상세페이지로 이동하기 위한 useParams
+  const { id } = useParams();
 
-  console.log(color);
-
+  // 슬라이더를 제어하기 위한 ref
   const sliderRef = useRef(null);
 
-  const { id } = useParams();
-  // 슬라이더를 제어하기 위한 ref
-
+  // 상세페이지로 이동하기 위한 useParams
   useEffect(() => {
-    const currentRestaurantInfo = restaurantInfo.find((item) => item.id === id);
+    const targetRestaurant = restaurantInfo.find((item) => item.id === id);
+    setCurrentRestaurant(targetRestaurant);
   }, [id]);
 
   // slider settings
