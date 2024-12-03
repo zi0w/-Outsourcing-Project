@@ -1,61 +1,40 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-import supabase from '../../supabase/supabase';
-
 import useAuthStore from '../../store/authStore';
 
 import AuthForm from '../../components/features/AuthForm';
 
 const SigninPage = () => {
   const navigate = useNavigate();
-  const login = useAuthStore((state) => state.login);
 
   const handleSignin = async (formState) => {
     const { email, password } = formState;
     try {
-      //로그인
-      const { user, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        // 이메일 또는 비밀번호가 잘못된 경우
-        if (error.message.includes('Invalid login credentials')) {
-          Swal.fire({
-            icon: 'error',
-            title: '로그인 오류',
-            text: '이메일 또는 비밀번호가 잘못되었습니다.'
-          });
-        } else {
-          // 그외 에러
-          Swal.fire({
-            icon: 'error',
-            title: '로그인 오류',
-            text: error.message
-          });
-        }
-        return;
-      }
+      //zustand 로그인 함수
+      await useAuthStore.getState().login(email, password);
 
       Swal.fire({
         icon: 'success',
         title: '로그인 성공!'
       });
 
-      //로그인시 zustand로 상태 저장
-      await login({ email, password });
-
       navigate('/');
     } catch (error) {
-      console.error(error);
-
-      Swal.fire({
-        icon: 'error',
-        title: '로그인 오류',
-        text: error
-      });
+      if (error.message.includes('Invalid login credentials')) {
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 오류',
+          text: '이메일 또는 비밀번호가 잘못되었습니다.'
+        });
+      } else {
+        // 그외 에러
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 오류',
+          text: error.message
+        });
+      }
     }
   };
 

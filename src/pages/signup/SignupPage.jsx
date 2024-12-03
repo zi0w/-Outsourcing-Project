@@ -10,7 +10,7 @@ const SignupPage = () => {
   const handleSignup = async (formState) => {
     const { email, password, nickname } = formState;
 
-    const defaultProfileImgUrl = 'https://i.pinimg.com/736x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg';
+    const defaultProfileImgUrl = 'https://i.pinimg.com/736x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg'; //TODO이미지 바꾸기
 
     try {
       const { user, error: signupError } = await supabase.auth.signUp({

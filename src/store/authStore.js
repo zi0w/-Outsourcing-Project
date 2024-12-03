@@ -9,29 +9,42 @@ const authStore = persist(
     user: null,
 
     //로그인
-    login: async () => {
-      //로그인한 사용자 정보 가져오기
-      const {
-        data: { user }
-      } = await supabase.auth.getUser();
+    login: async (email, password) => {
+      try {
+        //supabase 로그인 요청
+        const { user, error } = await supabase.auth.signInWithPassword({
+          email,
+          password
+        });
 
-      //users테이블에서 닉네임,프로필사진 가져오기
-      const { data, error } = await supabase
-        .from('users')
-        .select('id, nickname, profile_image_url')
-        .eq('email', user.email)
-        .single();
-
-      //상태 업데이트
-      set(() => ({
-        isLogin: true,
-        user: {
-          id: data?.id,
-          email: user?.email,
-          nickname: data?.nickname,
-          profile_image_url: data?.profile_image_url
+        if (error) {
+          throw new Error(error);
         }
-      }));
+
+        //users테이블에서 닉네임,프로필사진 가져오기
+        const { data, error: userError } = await supabase
+          .from('users')
+          .select('id, nickname, profile_image_url')
+          .eq('email', email)
+          .single();
+
+        if (userError) {
+          throw new Error(userError.message);
+        }
+
+        //상태 업데이트
+        set(() => ({
+          isLogin: true,
+          user: {
+            id: data?.id,
+            email: user?.email,
+            nickname: data?.nickname,
+            profile_image_url: data?.profile_image_url
+          }
+        }));
+      } catch (error) {
+        throw new Error(error.message);
+      }
     },
 
     //로그아웃
