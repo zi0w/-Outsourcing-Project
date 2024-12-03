@@ -5,11 +5,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 
 import supabase from '../../supabase/supabase';
+import useAuthStore from '../../store/authStore';
 
 const CommentForm = ({ id }) => {
-  // const isLoggin = useAuthStore((state) => state.isLoggin)
+  const isLogin = useAuthStore((state) => state.isLogin);
 
-  // const userId = useAuthStore((state) = state.user.id)
+  const user = useAuthStore((state) => state.user);
 
   const queryClient = useQueryClient();
 
@@ -17,17 +18,13 @@ const CommentForm = ({ id }) => {
 
   const handleChange = (e) => {
     setComment(e.target.value);
-    console.log(comment);
   };
 
   const handleSubmit = async (review) => {
     const { data, error } = await supabase
       .from('comments')
-      .insert([{ user_id: '073b37db-9e7a-4d24-a2fd-7bfae432ae33', restaurant_id: id, comment: review }])
+      .insert([{ user_id: user.id, restaurant_id: id, comment: review }])
       .select();
-
-    console.log(error);
-    console.log('data', data);
 
     return data;
   };
@@ -42,7 +39,7 @@ const CommentForm = ({ id }) => {
         ...old,
         {
           id: Date.now().toString(),
-          user_id: '073b37db-9e7a-4d24-a2fd-7bfae432ae33',
+          user_id: user.id,
           restaurant_id: id,
           comment: newComment,
           created_at: new Date()
@@ -69,17 +66,18 @@ const CommentForm = ({ id }) => {
   });
 
   const handleSubmitForm = (e) => {
-    // if (isLoggin) {
     e.preventDefault();
-    handleCommentSubmit(comment);
-    setComment('');
-    // } else {
-    //   Swal.fire({
-    //     icon: 'info',
-    //     title: '로그인 해주세요.',
-    //     text: '로그인 이후에 리뷰를 남길 수 있습니다.'
-    //   });
-    // }
+
+    if (isLogin) {
+      handleCommentSubmit(comment);
+      setComment('');
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: '로그인 해주세요.',
+        text: '로그인 이후에 리뷰를 남길 수 있습니다.'
+      });
+    }
   };
 
   return (

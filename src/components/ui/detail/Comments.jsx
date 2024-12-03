@@ -5,8 +5,6 @@ import supabase from '../../../supabase/supabase';
 import CommentBox from './CommentBox';
 
 const Comments = ({ id }) => {
-  // const id = '0c67a5e8-eef2-4995-a5bf-a14d6910ad0a';
-
   const getCommentDatas = async (restaurantId) => {
     let { data } = await supabase.from('comments').select('*').eq('restaurant_id', restaurantId);
 
@@ -43,9 +41,7 @@ const Comments = ({ id }) => {
       dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
       >
         {restaurantComments?.length > 0 ? (
-          restaurantComments.map((comment) => (
-            <CommentBox key={comment.id} userId={comment.user_id} comment={comment} />
-          ))
+          restaurantComments.map((comment) => <CommentBox key={comment.id} comment={comment} />)
         ) : (
           <p className="text-center text-slate-400">댓글이 없습니다. 댓글을 입력해주세요.</p>
         )}

@@ -1,11 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import supabase from '../../../supabase/supabase';
 import Swal from 'sweetalert2';
+import useAuthStore from '../../../store/authStore';
 
 const RestaurantInfo = ({ id }) => {
   const queryClient = useQueryClient();
 
-  const userId = '073b37db-9e7a-4d24-a2fd-7bfae432ae33'; // 로그인한 유저
+  const user = useAuthStore((state) => state.user);
 
   const getRestaurantData = async (id) => {
     let { data: restaurants, error } = await supabase.from('restaurants').select('*').eq('id', id).single();
@@ -27,40 +28,40 @@ const RestaurantInfo = ({ id }) => {
     queryFn: getLikesData
   });
 
-  const liked = likes?.some((like) => like.user_id === userId); // 이미 좋아요 했는지 여부
+  const liked = likes?.some((like) => like.user_id === user.id); // 이미 좋아요 했는지 여부
 
   const handleInsertlike = async (userId, restaurantId) => {
     if (liked) {
       const { data, error } = await supabase
         .from('likes')
         .delete()
-        .eq('user_id', userId)
+        .eq('user_id', user.id)
         .eq('restaurant_id', restaurantId);
       return data;
     } else {
       const { data, error } = await supabase
         .from('likes')
-        .insert([{ user_id: userId, restaurant_id: restaurantId }])
+        .insert([{ user_id: user.id, restaurant_id: restaurantId }])
         .select();
       return data;
     }
   };
 
   const { mutate: handleUpdateLike } = useMutation({
-    mutationFn: () => handleInsertlike(userId, id),
+    mutationFn: () => handleInsertlike(user.id, id),
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ['like', id] });
 
       const previousLikes = queryClient.getQueryData(['like', id]);
 
       if (!liked) {
-        queryClient.setQueryData(['like', id], (old) => old.filter((like) => like.user_id !== userId));
+        queryClient.setQueryData(['like', id], (old) => old.filter((like) => like.user_id !== user.id));
       } else {
         queryClient.setQueryData(['like', id], (old) => [
           ...old,
           {
             id: Date.now().toString(),
-            user_id: userId,
+            user_id: user.id,
             restaurant_id: id,
             created_at: new Date()
           }

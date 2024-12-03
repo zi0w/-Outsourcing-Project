@@ -1,7 +1,8 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-import supabase from '../../supabase/supabase';
+import useAuthStore from '../../store/authStore';
+
 import AuthForm from '../../components/features/AuthForm';
 
 const SigninPage = () => {
@@ -10,14 +11,8 @@ const SigninPage = () => {
   const handleSignin = async (formState) => {
     const { email, password } = formState;
     try {
-      const { user, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
+      //zustand 로그인 함수
+      await useAuthStore.getState().login(email, password);
 
       Swal.fire({
         icon: 'success',
@@ -26,13 +21,20 @@ const SigninPage = () => {
 
       navigate('/');
     } catch (error) {
-      console.error(error);
-
-      Swal.fire({
-        icon: 'error',
-        title: '로그인 오류',
-        text: error
-      });
+      if (error.message.includes('Invalid login credentials')) {
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 오류',
+          text: '이메일 또는 비밀번호가 잘못되었습니다.'
+        });
+      } else {
+        // 그외 에러
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 오류',
+          text: error.message
+        });
+      }
     }
   };
 

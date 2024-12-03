@@ -3,10 +3,11 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import supabase from '../../../supabase/supabase';
 import Swal from 'sweetalert2';
 import { useState } from 'react';
+import useAuthStore from '../../../store/authStore';
 
-const CommentBox = ({ userId, comment }) => {
+const CommentBox = ({ comment }) => {
   // 현재 로그인한 유저
-  // const userId = useAuthStore((state) = state.user.id)
+  const user = useAuthStore((state) => state.user);
 
   const [modify, setModify] = useState(false);
 
@@ -26,8 +27,8 @@ const CommentBox = ({ userId, comment }) => {
     isPending,
     isError
   } = useQuery({
-    queryKey: ['user', userId],
-    queryFn: () => getUserData(userId)
+    queryKey: ['user', comment.user_id],
+    queryFn: () => getUserData(comment.user_id)
   });
 
   console.log('userData', userData);
@@ -46,7 +47,7 @@ const CommentBox = ({ userId, comment }) => {
 
       return { previousComments };
     },
-    onError: (err, context) => {
+    onError: (err, _, context) => {
       queryClient.setQueriesData(['comments', comment.restaurant_id], context.previousComments);
       Swal.fire({
         icon: 'error',
@@ -151,7 +152,7 @@ const CommentBox = ({ userId, comment }) => {
             </>
           )}
         </div>
-        {userData.id === userId && (
+        {userData.id === user.id && (
           <div className="mt-[8px] flex gap-2 items-center justify-end">
             <button
               onClick={handleCommentUpdate}
@@ -160,7 +161,7 @@ const CommentBox = ({ userId, comment }) => {
               수정
             </button>
             <button
-              onClick={() => handleCommentDelete(userId)}
+              onClick={() => handleCommentDelete(comment.user_id)}
               className="w-[50px] h-[30px] border-none outline-none rounded-[5px] text-white text-sm bg-red-600"
             >
               삭제
