@@ -7,6 +7,10 @@ import Swal from 'sweetalert2';
 import supabase from '../../supabase/supabase';
 
 const CommentForm = ({ id }) => {
+  // const isLoggin = useAuthStore((state) => state.isLoggin)
+
+  // const userId = useAuthStore((state) = state.user.id)
+
   const queryClient = useQueryClient();
 
   const [comment, setComment] = useState('');
@@ -65,9 +69,17 @@ const CommentForm = ({ id }) => {
   });
 
   const handleSubmitForm = (e) => {
+    // if (isLoggin) {
     e.preventDefault();
     handleCommentSubmit(comment);
     setComment('');
+    // } else {
+    //   Swal.fire({
+    //     icon: 'info',
+    //     title: '로그인 해주세요.',
+    //     text: '로그인 이후에 리뷰를 남길 수 있습니다.'
+    //   });
+    // }
   };
 
   return (

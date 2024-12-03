@@ -19,7 +19,8 @@ const Comments = ({ id }) => {
     isError
   } = useQuery({
     queryKey: ['comments', id],
-    queryFn: () => getCommentDatas(id)
+    queryFn: () => getCommentDatas(id),
+    staleTime: 5 * 1000
   });
 
   console.log(restaurantComments);
@@ -43,12 +44,7 @@ const Comments = ({ id }) => {
       >
         {restaurantComments?.length > 0 ? (
           restaurantComments.map((comment) => (
-            <CommentBox
-              key={comment.id}
-              userId={comment.user_id}
-              comment={comment.comment}
-              createdAt={comment.created_at}
-            />
+            <CommentBox key={comment.id} userId={comment.user_id} comment={comment} />
           ))
         ) : (
           <p className="text-center text-slate-400">댓글이 없습니다. 댓글을 입력해주세요.</p>
