@@ -1,6 +1,7 @@
 import Comments from './Comments';
 
 import CommentForm from '../../features/CommentForm';
+import DetailMap from '../../features/DetailMap';
 
 const Detail = () => {
   return (
@@ -28,7 +29,8 @@ const Detail = () => {
           </div>
 
           {/* 식당 위치 */}
-          <div className="w-full h-full rounded-[24px] bg-red-500">여긴 지도</div>
+          {/* <div className="w-full h-full rounded-[24px] bg-red-500">여긴 지도</div> */}
+          <DetailMap id={'0c67a5e8-eef2-4995-a5bf-a14d6910ad0a'} />
         </div>
       </div>
     </section>
