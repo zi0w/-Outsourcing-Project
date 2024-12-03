@@ -43,7 +43,7 @@ const SigninPage = () => {
         <AuthForm mode="signin" onSubmit={handleSignin} />
         <div className="flex items-center justify-center gap-2 mt-6  text-sm">
           <p className="text-[#aaa]">계정이 없으신가요?</p>
-          <Link to="/signup" className="font-bold text-[#EC4C4C]">
+          <Link to="/signup" className="font-bold text-[#EC4C4C] hover:underline">
             회원가입하러 가기
           </Link>
         </div>

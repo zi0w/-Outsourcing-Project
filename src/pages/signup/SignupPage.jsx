@@ -62,7 +62,7 @@ const SignupPage = () => {
         <AuthForm mode="signup" onSubmit={handleSignup} />
         <div className="flex items-center justify-center gap-2 mt-6  text-sm">
           <p className="text-[#aaa]">이미 계정이 있으신가요?</p>
-          <Link to="/signin" className="font-bold text-[#EC4C4C]">
+          <Link to="/signin" className="font-bold text-[#EC4C4C] hover:underline">
             로그인하러 가기
           </Link>
         </div>
