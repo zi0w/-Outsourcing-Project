@@ -1,31 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-
-import supabase from '../../../supabase/supabase';
-
 import CommentBox from './CommentBox';
 
+import useComments from '../../../hooks/useComments';
+
 const Comments = ({ id }) => {
-  const getCommentDatas = async (restaurantId) => {
-    let { data } = await supabase
-      .from('comments')
-      .select('*')
-      .eq('restaurant_id', restaurantId)
-      .order('created_at', { ascending: false });
-
-    return data;
-  };
-
-  const {
-    data: restaurantComments,
-    isPending,
-    isError
-  } = useQuery({
-    queryKey: ['comments', id],
-    queryFn: () => getCommentDatas(id),
-    staleTime: 5 * 1000
-  });
-
-  console.log(restaurantComments);
+  const { restaurantComments, isPending, isError } = useComments(id);
 
   if (isPending) {
     return <div>로딩 중..</div>;
