@@ -21,7 +21,22 @@ const SigninPage = () => {
       });
 
       if (error) {
-        throw new Error(error.message);
+        // 이메일 또는 비밀번호가 잘못된 경우
+        if (error.message.includes('Invalid login credentials')) {
+          Swal.fire({
+            icon: 'error',
+            title: '로그인 오류',
+            text: '이메일 또는 비밀번호가 잘못되었습니다.'
+          });
+        } else {
+          // 그외 에러
+          Swal.fire({
+            icon: 'error',
+            title: '로그인 오류',
+            text: error.message
+          });
+        }
+        return;
       }
 
       Swal.fire({
