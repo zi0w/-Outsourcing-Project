@@ -22,7 +22,7 @@ const Router = () => {
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/signin" element={<PublicRoute element={<SigninPage />} />} />
-          <Route path="/signup" element={<SignupPage />} />
+          <Route path="/signup" element={<PublicRoute element={<SignupPage />} />} />
           <Route
             path="/profile"
             element={
