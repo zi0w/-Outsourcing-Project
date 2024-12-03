@@ -1,6 +1,6 @@
 const { kakao } = window;
 
-const changeAddress = (address, name, ref) => {
+const changeAddress = (address, name, description, ref) => {
   const mapOption = {
     center: new window.kakao.maps.LatLng(37.566696, 126.977942), // 지도의 중심좌표
     level: 3 // 지도의 확대 레벨
@@ -21,18 +21,33 @@ const changeAddress = (address, name, ref) => {
         position: cords
       });
 
-      console.log('marker', marker);
+      marker.setMap(map);
 
-      let infowindow = new kakao.maps.InfoWindow({
-        content: `<div style="width: 150px; text-align: center; border-radius: 16px; padding: 10px 4px">${name}</div>`
+      let content = `
+        <div class="map-overlay">
+          <div id="close">&#128473;</div>
+          <h4 class="name">${name}</h4>
+          <p class="desc">${description}</p>
+        </div>
+      `;
+
+      let customOverlay = new kakao.maps.CustomOverlay({
+        position: cords,
+        content: content,
+        yAnchor: 1.35
       });
 
-      console.log('infowindow', infowindow);
+      customOverlay.setMap(map);
 
-      infowindow.open(map, marker);
-
-      console.log(map);
       map.setCenter(cords);
+
+      kakao.maps.event.addListener(marker, 'click', function () {
+        customOverlay.setMap(map);
+      });
+
+      document.querySelector('#close').addEventListener('click', () => {
+        customOverlay.setMap(null);
+      });
     }
   });
 };

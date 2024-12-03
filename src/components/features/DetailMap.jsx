@@ -8,9 +8,11 @@ const DetailMap = ({ id }) => {
   const mapRef = useRef(null);
 
   const getRestorantAddress = async (restaurantId) => {
-    const { data, error } = await supabase.from('restaurants').select('name, address').eq('id', restaurantId).single();
-
-    console.log(data);
+    const { data, error } = await supabase
+      .from('restaurants')
+      .select('name, address, description')
+      .eq('id', restaurantId)
+      .single();
 
     return data;
   };
@@ -27,9 +29,11 @@ const DetailMap = ({ id }) => {
 
   useEffect(() => {
     if (mapData?.address && mapRef.current) {
-      changeAddress(mapData.address, mapData.name, mapRef);
+      changeAddress(mapData.address, mapData.name, mapData.description, mapRef);
     }
   }, [mapData]);
+
+  console.log(mapRef);
 
   if (isPending) {
     return <div>로딩 중..</div>;
@@ -39,11 +43,7 @@ const DetailMap = ({ id }) => {
     return <div>에러 발생...</div>;
   }
 
-  return (
-    <div ref={mapRef} className="w-full h-full rounded-[24px] bg-red-500">
-      여긴 지도
-    </div>
-  );
+  return <div ref={mapRef} className="w-full h-full rounded-[24px]" />;
 };
 
 export default DetailMap;
