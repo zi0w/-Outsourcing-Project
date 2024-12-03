@@ -7,6 +7,8 @@ const authStore = persist(
   (set) => ({
     isLogin: false,
     user: null,
+
+    //로그인
     login: async () => {
       //로그인한 사용자 정보 가져오기
       const {
@@ -20,6 +22,7 @@ const authStore = persist(
         .eq('email', user.email)
         .single();
 
+      //상태 업데이트
       set(() => ({
         isLogin: true,
         user: {
@@ -30,6 +33,8 @@ const authStore = persist(
         }
       }));
     },
+
+    //로그아웃
     logout: () => {
       // 상태 초기화
       set(() => ({
@@ -37,7 +42,6 @@ const authStore = persist(
         user: null
       }));
 
-      // 로컬 스토리지에서 제거
       localStorage.clear();
     }
   }),
