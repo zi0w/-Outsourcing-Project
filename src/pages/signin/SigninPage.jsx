@@ -2,14 +2,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 import supabase from '../../supabase/supabase';
+
+import useAuthStore from '../../store/authStore';
+
 import AuthForm from '../../components/features/AuthForm';
 
 const SigninPage = () => {
   const navigate = useNavigate();
+  const login = useAuthStore((state) => state.login);
 
   const handleSignin = async (formState) => {
     const { email, password } = formState;
     try {
+      //로그인
       const { user, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -23,6 +28,9 @@ const SigninPage = () => {
         icon: 'success',
         title: '로그인 성공!'
       });
+
+      //로그인시 zustand로 상태 저장
+      await login({ email, password });
 
       navigate('/');
     } catch (error) {
