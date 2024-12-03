@@ -1,12 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 import SearchMap from '../../features/SearchMap';
 import supabase from '../../../supabase/supabase';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import SearchList from './SearchList';
 
 const Search = () => {
   const [colorFilter, setColorFilter] = useState('all');
-  console.log(colorFilter);
+  const [restaurant, setRestaurant] = useState('');
+  const inputRef = useRef(null);
+  console.log(restaurant);
 
   const fetchRestaurantData = async () => {
     const { data } = await supabase.from('restaurants').select('*');
@@ -45,6 +47,12 @@ const Search = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setRestaurant(inputRef.current.value);
+    inputRef.current.value = '';
+  };
+
   return (
     <div className="bg-[#0E0E0E] h-screen">
       <div className="max-w-[1440px] w-full h-full p-[40px] m-auto flex flex-row gap-[40px]">
@@ -73,10 +81,13 @@ const Search = () => {
             </button>
             <span className="text-[13px]">으로 검색하기</span>
           </div>
-          <div className="w-[480px] h-[40px] border border-[3px] border-[#3396FF] rounded-[10px] bg-white mt-3 drop-shadow-md flex items-center justify-around">
-            <input type="text" className="w-10/12 outline-none" />
+          <form
+            onSubmit={handleSearch}
+            className="w-[480px] h-[40px] p-3 border border-[3px] border-[#3396FF] rounded-[10px] bg-white mt-3 drop-shadow-md flex items-center justify-around"
+          >
+            <input ref={inputRef} type="text" className="w-10/12 outline-none" />
             <button className="bg-search-icon w-[24px] h-[24px]"></button>
-          </div>
+          </form>
           <ul className="mt-[20px] flex flex-col gap-[20px] overflow-auto">
             {filterdRestaurants().map((restaurant) => {
               return <SearchList key={restaurant.id} restaurant={restaurant} />;
