@@ -1,6 +1,6 @@
 const { kakao } = window;
 
-const changeAddress = (address, name, description, ref) => {
+const changeAddress = (address, name, description, phoneNumber, ref) => {
   const mapOption = {
     center: new window.kakao.maps.LatLng(37.566696, 126.977942), // 지도의 중심좌표
     level: 3 // 지도의 확대 레벨
@@ -28,6 +28,7 @@ const changeAddress = (address, name, description, ref) => {
           <div id="close">&#128473;</div>
           <h4 class="name">${name}</h4>
           <p class="desc">${description}</p>
+          <a href=${`tel: ${phoneNumber}`} class="phone-number">&#128222; : ${phoneNumber}</a>
         </div>
       `;
 

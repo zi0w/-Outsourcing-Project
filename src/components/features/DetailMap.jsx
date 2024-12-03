@@ -11,7 +11,7 @@ const DetailMap = ({ id }) => {
 
   useEffect(() => {
     if (mapData?.address && mapRef.current) {
-      changeAddress(mapData.address, mapData.name, mapData.description, mapRef);
+      changeAddress(mapData.address, mapData.name, mapData.description, mapData.phone_number, mapRef);
     }
   }, [mapData]);
 

@@ -1,107 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-
-import supabase from '../../../supabase/supabase';
-import Swal from 'sweetalert2';
-import { useState } from 'react';
 import useAuthStore from '../../../store/authStore';
+
+import useCommentBox from '../../../hooks/useCommentBox';
 
 const CommentBox = ({ comment }) => {
   // 현재 로그인한 유저
   const user = useAuthStore((state) => state.user);
 
-  const [modify, setModify] = useState(false);
-
-  const [newComment, setNewComment] = useState(comment.comment);
-
-  const queryClient = useQueryClient();
-
-  // 댓글을 작성한 유저
-  const getUserData = async (Id) => {
-    let { data } = await supabase.from('users').select('*').eq('id', Id).single();
-
-    return data;
-  };
-
   const {
-    data: userData,
+    modify,
+    setModify,
+    newComment,
+    setNewComment,
+    userData,
     isPending,
-    isError
-  } = useQuery({
-    queryKey: ['user', comment.user_id],
-    queryFn: () => getUserData(comment.user_id)
-  });
-
-  console.log('userData', userData);
-
-  const commentDelete = async (commnetUserId) => {
-    const { data, error } = await supabase.from('comments').delete().eq('user_id', commnetUserId).eq('id', comment.id);
-    console.log(data);
-  };
-
-  const { mutate: handleCommentDelete } = useMutation({
-    mutationFn: (commnetUserId) => commentDelete(commnetUserId),
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['comments', comment.restaurant_id] });
-
-      const previousComments = queryClient.getQueryData(['comments', comment.restaurant_id]);
-
-      return { previousComments };
-    },
-    onError: (err, _, context) => {
-      queryClient.setQueriesData(['comments', comment.restaurant_id], context.previousComments);
-      Swal.fire({
-        icon: 'error',
-        title: '댓글 삭제에 실패하셨습니다.',
-        text: '잠시 후 댓글을 삭제하세요.'
-      });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', comment.restaurant_id] });
-      Swal.fire({
-        icon: 'success',
-        title: '댓글을 삭제했습니다.',
-        text: '댓글 삭제에 성공했습니다.'
-      });
-    }
-  });
-
-  const commentModify = async () => {
-    const { data, error } = await supabase
-      .from('comments')
-      .update({ comment: newComment })
-      .eq('id', comment.id)
-      .eq('user_id', userId)
-      .select();
-
-    return data;
-  };
-
-  const { mutate: handleCommentModify } = useMutation({
-    mutationFn: commentModify,
-    onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['comments', comment.restaurant_id] });
-
-      const previousComments = queryClient.getQueryData(['comments', comment.restaurant_id]);
-
-      return { previousComments };
-    },
-    onError: (err, context) => {
-      queryClient.setQueriesData(['comments', comment.restaurant_id], context.previousComments);
-      Swal.fire({
-        icon: 'error',
-        title: '댓글 수정에 실패했습니다.',
-        text: '잠시 후 댓글을 수정하세요.'
-      });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', comment.restaurant_id] });
-      Swal.fire({
-        icon: 'success',
-        title: '댓글을 수정했습니다.',
-        text: '댓글 수정에 성공했습니다.'
-      });
-    }
-  });
+    isError,
+    handleCommentDelete,
+    handleCommentModify
+  } = useCommentBox(comment, user);
 
   const handleCommentUpdate = () => {
     if (modify) {
