@@ -19,14 +19,14 @@ const fetchImages = async (bucketName) => {
   });
 
   // console.log(imageUrls);
-  return imageUrls;
+  return imageUrls;  
 };
 
 // React Query를 사용하여 이미지를 가져오는 커스텀 훅
 const useFetchImages = (bucketName) => {
   return useQuery({
     queryKey: [bucketName], // Query Key로 버킷 이름과 제한 값을 지정
-    queryFn: () => fetchImages(bucketName), // Fetch 함수 호출
+    queryFn: () => fetchImages(bucketName) // Fetch 함수 호출
   });
 };
 
