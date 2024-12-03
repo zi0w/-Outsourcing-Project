@@ -153,28 +153,6 @@ const ProfilePage = () => {
     queryFn: fetchComments
   });
 
-  // 로그인 유저 정보 가져오기
-  // const getUerData = async () => {
-  //   const { data, error } = await supabase.auth.getUser();
-  //   if (error) console.error(error);
-  //   return data;
-  // };
-
-  // const { data, isPending, isError } = useQuery({
-  //   queryKey: ['user'],
-  //   queryFn: getUerData
-  // });
-
-  // if (isPending) {
-  //   return <div>로딩 중...</div>;
-  // }
-
-  // if (isError) {
-  //   return <div>에러 발생...</div>;
-  // }
-
-  // console.log('유저 데이터:', data);
-
   // 시간 변경 함수
   const formatCustomDateTime = (writingTime) => {
     const date = new Date(writingTime);
