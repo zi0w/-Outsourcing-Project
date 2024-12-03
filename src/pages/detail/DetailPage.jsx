@@ -1,9 +1,7 @@
+import Detail from '../../components/ui/detail/Detail';
+
 const DetailPage = () => {
-  return (
-    <div>
-      <h1>DetailPage</h1>
-    </div>
-  );
+  return <Detail />;
 };
 
 export default DetailPage;
