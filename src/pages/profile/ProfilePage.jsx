@@ -5,7 +5,7 @@ import supabase from '../../supabase/supabase';
 const ProfilePage = () => {
   const [tab, setTab] = useState('likes');
   const [likes, setLikes] = useState([]);
-  const [reviews, setReviews] = useState([]);
+  const [comments, setComments] = useState([]);
   const [newProfileImg, setNewProfileImg] = useState('');
   const [newNickname, setNewNickname] = useState('');
 
@@ -38,16 +38,16 @@ const ProfilePage = () => {
     if (error) console.error(error);
   };
 
-  const fetchLikes = async () => {
-    const { data: likes, error } = await supabase.from('likes').select('*').eq('user_id', data.user.id);
+  const fetchLikes = async (currentUserId) => {
+    const { data: likes, error } = await supabase.from('likes').select('*').eq('user_id', currentUserId);
     if (error) console.error(error);
     return likes;
   };
 
-  const fetchReviews = async () => {
-    const { data: reviews, error } = await supabase.from('reviews').select('*').eq('user_id', data.id);
+  const fetchComments = async (currentUserId) => {
+    const { data: comments, error } = await supabase.from('comments').select('*').eq('user_id', currentUserId);
     if (error) console.error(error);
-    return reviews;
+    return comments;
   };
 
   // 로그인 유저 정보 가져오기
@@ -90,7 +90,7 @@ const ProfilePage = () => {
         >
           좋아요 한 매장
         </button>
-        <button className="w-[400px] py-3 text-center hover:bg-gray-600" onClick={() => setTab('reviews')}>
+        <button className="w-[400px] py-3 text-center hover:bg-gray-600" onClick={() => setTab('comments')}>
           리뷰
         </button>
         <button
@@ -127,10 +127,10 @@ const ProfilePage = () => {
           )}
         </ul>
       )}
-      {tab === 'reviews' && (
+      {tab === 'comments' && (
         <ul>
-          {reviews.length > 0 ? (
-            reviews.map((review) => (
+          {comments.length > 0 ? (
+            comments.map((review) => (
               <li key={review.id}>
                 <div>
                   <img
