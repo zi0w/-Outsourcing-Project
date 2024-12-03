@@ -9,7 +9,7 @@ const SignupPage = () => {
 
   const handleSignup = async (formState) => {
     const { email, password, nickname } = formState;
-    
+
     const defaultProfileImgUrl = 'https://i.pinimg.com/736x/3b/73/a1/3b73a13983f88f8b84e130bb3fb29e17.jpg';
 
     try {
@@ -35,7 +35,7 @@ const SignupPage = () => {
           profile_image_url: defaultProfileImgUrl
         }
       ]);
-      
+
       if (insertError) {
         throw new Error(insertError.message);
       }
@@ -47,13 +47,22 @@ const SignupPage = () => {
 
       navigate('/signin');
     } catch (error) {
-      console.log(error);
-
-      Swal.fire({
-        icon: 'error',
-        title: '오류 발생',
-        text: error
-      });
+      if (error.message.includes('User already registered')) {
+        Swal.fire({
+          icon: 'error',
+          title: '회원가입 오류',
+          text: '이미 가입된 이메일입니다.'
+        });
+      } else {
+        // 그외 에러
+        console.log(error);
+        Swal.fire({
+          icon: 'error',
+          title: '오류 발생',
+          text: error
+        });
+      }
+      return;
     }
   };
 
