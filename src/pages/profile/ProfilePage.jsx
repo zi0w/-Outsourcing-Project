@@ -204,32 +204,32 @@ const ProfilePage = () => {
   }, [newProfileImg]);
 
   return (
-    <section className="h-[calc(100vh-230px)] text-white bg-gray-600 flex-col items-center">
+    <section className="h-[calc(100vh-230px)] bg-gray-500 text-white flex-col items-center pt-14">
       <div className="text-center">
         <img
           src={newProfileImg || user.profile_image_url || defaultImg}
           alt="프로필 사진"
           className="w-[138px] h-[138px] mx-auto rounded-full"
         />
-        <h1 className="text-black mt-[20px] text-white font-bold text-[24px]">{user.nickname}</h1>
+        <h1 className="text-black mt-[20px] text-white font-medium text-[20px]">{user.nickname}</h1>
       </div>
 
       {/* nav */}
-      <div className="flex text-white mx-auto w-[900px] my-[30px] rounded-[38px] font-semibold">
+      <div className="flex text-white mx-auto w-[1000px] my-[30px] text-[18px] rounded-[38px] font-medium">
         <button
-          className={`w-[400px] py-3 rounded-s-[38px] text-center hover:bg-[#2B2B2B] ${tab === 'likes' ? 'bg-[#2B2B2B]' : 'bg-[#070707]'}`}
+          className={`w-[400px] py-2 rounded-s-[38px] text-center hover:bg-[#2B2B2B] ${tab === 'likes' ? 'bg-[#2B2B2B]' : 'bg-[#070707]'}`}
           onClick={() => setTab('likes')}
         >
           좋아요 한 매장
         </button>
         <button
-          className={`w-[400px] py-3 text-center hover:bg-[#2B2B2B] ${tab === 'comments' ? 'bg-[#2B2B2B]' : 'bg-[#070707]'}`}
+          className={`w-[400px] py-2 text-center hover:bg-[#2B2B2B] ${tab === 'comments' ? 'bg-[#2B2B2B]' : 'bg-[#070707]'}`}
           onClick={() => setTab('comments')}
         >
           리뷰
         </button>
         <button
-          className={`w-[400px] py-3 text-center hover:bg-[#2B2B2B] rounded-e-[38px] ${tab === 'profile' ? 'bg-[#2B2B2B]' : 'bg-[#070707]'}`}
+          className={`w-[400px] py-2 text-center hover:bg-[#2B2B2B] rounded-e-[38px] ${tab === 'profile' ? 'bg-[#2B2B2B]' : 'bg-[#070707]'}`}
           onClick={() => setTab('profile')}
         >
           프로필 변경
@@ -237,7 +237,7 @@ const ProfilePage = () => {
       </div>
 
       {/* content */}
-      <div className="flex justify-center text-center mx-auto ">
+      <div className="flex justify-center text-center mx-auto overflow-x-hidden">
         {tab === 'likes' && (
           <>
             {likesPending ? (
@@ -245,22 +245,26 @@ const ProfilePage = () => {
             ) : likesError ? (
               <p className="font-semibold">북마크 데이터를 가져오는 중 에러가 발생하였습니다.</p>
             ) : (
-              <div className="overflow-y-auto h-[300px]">
+              <div className="mt-10 overflow-y-auto h-[280px] pr-2">
                 <ul className="">
                   {likes.length > 0 ? (
                     likes.map((like) => (
                       <li
                         key={like.id}
-                        className="w-[700px] p-5 flex flex-col items-start rounded-xl my-5 text-black bg-white"
+                        className="w-[700px] p-4 flex flex-col items-start rounded-xl mb-8 text-black bg-white"
                       >
                         <div className="flex items-center">
-                          <img src={newProfileImg || defaultImg} className="w-12 h-12 rounded-full" alt="프로필 사진" />
+                          <img
+                            src={newProfileImg || user.profile_image_url || defaultImg}
+                            className="w-12 h-12 rounded-full"
+                            alt="프로필 사진"
+                          />
                           <div className="pl-3 flex flex-col justify-start">
                             <h1 className="font-semibold text-start">{like.restaurants?.name}</h1>
                             <p>{like.restaurants?.address}</p>
                           </div>
                         </div>
-                        <div className="flex w-full justify-between pl-[60px] mt-2">
+                        <div className="flex w-full justify-between items-center pl-[60px] mt-1">
                           {like.restaurants?.operating_time.length > 1 ? (
                             <div className="flex gap-3">
                               <p>평일:{like.restaurants?.operating_time[0]}</p>
@@ -270,8 +274,38 @@ const ProfilePage = () => {
                             <p>평일,주말:{like.restaurants?.operating_time[0]}</p>
                           )}
                           <button type="button" onClick={() => handleLikeDelete.mutate(like.id)}>
-                            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" className="w-5">
-                              <path d="M432 80h-82.38l-34-56.75C306.1 8.827 291.4 0 274.6 0H173.4C156.6 0 141 8.827 132.4 23.25L98.38 80H16C7.125 80 0 87.13 0 96v16C0 120.9 7.125 128 16 128H32v320c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V128h16C440.9 128 448 120.9 448 112V96C448 87.13 440.9 80 432 80zM171.9 50.88C172.9 49.13 174.9 48 177 48h94c2.125 0 4.125 1.125 5.125 2.875L293.6 80H154.4L171.9 50.88zM352 464H96c-8.837 0-16-7.163-16-16V128h288v320C368 456.8 360.8 464 352 464zM224 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S208 183.2 208 192v208C208 408.8 215.2 416 224 416zM144 416C152.8 416 160 408.8 160 400V192c0-8.844-7.156-16-16-16S128 183.2 128 192v208C128 408.8 135.2 416 144 416zM304 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S288 183.2 288 192v208C288 408.8 295.2 416 304 416z" />
+                            <svg
+                              enable-background="new 0 0 48 48"
+                              height="20px"
+                              version="1.1"
+                              viewBox="0 0 48 48"
+                              width="18px"
+                              xml:space="preserve"
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                            >
+                              <g id="Expanded">
+                                <g>
+                                  <g>
+                                    <path d="M41,48H7V7h34V48z M9,46h30V9H9V46z" />
+                                  </g>
+                                  <g>
+                                    <path d="M35,9H13V1h22V9z M15,7h18V3H15V7z" />
+                                  </g>
+                                  <g>
+                                    <path d="M16,41c-0.553,0-1-0.447-1-1V15c0-0.553,0.447-1,1-1s1,0.447,1,1v25C17,40.553,16.553,41,16,41z" />
+                                  </g>
+                                  <g>
+                                    <path d="M24,41c-0.553,0-1-0.447-1-1V15c0-0.553,0.447-1,1-1s1,0.447,1,1v25C25,40.553,24.553,41,24,41z" />
+                                  </g>
+                                  <g>
+                                    <path d="M32,41c-0.553,0-1-0.447-1-1V15c0-0.553,0.447-1,1-1s1,0.447,1,1v25C33,40.553,32.553,41,32,41z" />
+                                  </g>
+                                  <g>
+                                    <rect height="2" width="48" y="7" />
+                                  </g>
+                                </g>
+                              </g>
                             </svg>
                           </button>
                         </div>
@@ -292,26 +326,60 @@ const ProfilePage = () => {
             ) : commentsError ? (
               <p className="font-semibold">댓글 불러오기 오류 발생..</p>
             ) : (
-              <div className="overflow-y-auto h-[280px]">
+              <div className="mt-10 overflow-y-auto h-[280px] pr-4">
                 <ul>
                   {comments.length > 0 ? (
                     comments.map((comment) => (
                       <li
                         key={comment.id}
-                        className="w-[700px] p-5 flex flex-col items-start rounded-xl my-5 text-black bg-white"
+                        className="w-[700px] p-4 flex flex-col items-start rounded-xl mb-8 text-black bg-white"
                       >
                         <div className="flex flex-row justify-start">
-                          <img src={newProfileImg || defaultImg} className="w-12 h-12 rounded-full" alt="프로필 사진" />
+                          <img
+                            src={newProfileImg || user.profile_image_url || defaultImg}
+                            className="w-12 h-12 rounded-full"
+                            alt="프로필 사진"
+                          />
                           <div className="pl-3 flex flex-col justify-start">
                             <h1 className="font-semibold text-start">{comment.restaurant?.name}</h1>
                             <p>{comment.comment}</p>
                           </div>
                         </div>
                         <div className="w-full flex justify-between pl-[60px] mt-2">
-                          <p>{formatCustomDateTime(comment.created_at)}</p>
+                          <p className="">{formatCustomDateTime(comment.created_at)}</p>
                           <button type="button" onClick={() => handleCommentDelete.mutate(comment.id)}>
-                            <svg viewBox="0 0 448 512" xmlns="http://www.w3.org/2000/svg" className="w-5">
-                              <path d="M432 80h-82.38l-34-56.75C306.1 8.827 291.4 0 274.6 0H173.4C156.6 0 141 8.827 132.4 23.25L98.38 80H16C7.125 80 0 87.13 0 96v16C0 120.9 7.125 128 16 128H32v320c0 35.35 28.65 64 64 64h256c35.35 0 64-28.65 64-64V128h16C440.9 128 448 120.9 448 112V96C448 87.13 440.9 80 432 80zM171.9 50.88C172.9 49.13 174.9 48 177 48h94c2.125 0 4.125 1.125 5.125 2.875L293.6 80H154.4L171.9 50.88zM352 464H96c-8.837 0-16-7.163-16-16V128h288v320C368 456.8 360.8 464 352 464zM224 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S208 183.2 208 192v208C208 408.8 215.2 416 224 416zM144 416C152.8 416 160 408.8 160 400V192c0-8.844-7.156-16-16-16S128 183.2 128 192v208C128 408.8 135.2 416 144 416zM304 416c8.844 0 16-7.156 16-16V192c0-8.844-7.156-16-16-16S288 183.2 288 192v208C288 408.8 295.2 416 304 416z" />
+                            <svg
+                              enable-background="new 0 0 48 48"
+                              height="20px"
+                              version="1.1"
+                              viewBox="0 0 48 48"
+                              width="18px"
+                              xml:space="preserve"
+                              xmlns="http://www.w3.org/2000/svg"
+                              xmlns:xlink="http://www.w3.org/1999/xlink"
+                            >
+                              <g id="Expanded">
+                                <g>
+                                  <g>
+                                    <path d="M41,48H7V7h34V48z M9,46h30V9H9V46z" />
+                                  </g>
+                                  <g>
+                                    <path d="M35,9H13V1h22V9z M15,7h18V3H15V7z" />
+                                  </g>
+                                  <g>
+                                    <path d="M16,41c-0.553,0-1-0.447-1-1V15c0-0.553,0.447-1,1-1s1,0.447,1,1v25C17,40.553,16.553,41,16,41z" />
+                                  </g>
+                                  <g>
+                                    <path d="M24,41c-0.553,0-1-0.447-1-1V15c0-0.553,0.447-1,1-1s1,0.447,1,1v25C25,40.553,24.553,41,24,41z" />
+                                  </g>
+                                  <g>
+                                    <path d="M32,41c-0.553,0-1-0.447-1-1V15c0-0.553,0.447-1,1-1s1,0.447,1,1v25C33,40.553,32.553,41,32,41z" />
+                                  </g>
+                                  <g>
+                                    <rect height="2" width="48" y="7" />
+                                  </g>
+                                </g>
+                              </g>
                             </svg>
                           </button>
                         </div>
@@ -326,28 +394,28 @@ const ProfilePage = () => {
           </>
         )}
         {tab === 'profile' && (
-          <form onSubmit={handleSubmit} className="space-y-4 rounded-xl flex flex-col items-center">
-            <div className="w-[500px] flex flex-col items-start">
-              <label className="text-sm font-medium">닉네임 변경</label>
+          <form onSubmit={handleSubmit} className="space-y-6 rounded-xl flex flex-col items-center">
+            <div className="w-[500px] flex flex-col items-start mt-4">
+              <label className="font-[26px] mb-2">닉네임 변경</label>
               <input
                 type="text"
                 value={newNickname}
                 placeholder="변경하실 닉네임을 입력해주세요."
-                className="mt-1 block w-full bg-white border border-gray-700 rounded-lg p-2 text-black"
+                className="mt-1 block w-full bg-white border border-gray-700 rounded-xl p-2 border-none pl-4"
                 onChange={(e) => setNewNickname(e.target.value)}
               />
             </div>
             <div className="w-[500px] flex flex-col items-start">
-              <label className="text-sm font-medium">프로필 이미지 변경</label>
+              <label className="font-[26px] mb-2">프로필 이미지 변경</label>
               <input
                 type="file"
-                className="mt-1 block w-[250px] text-sm text-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-700 file:text-gray-300 hover:file:bg-gray-600"
+                className="mt-1 block w-[250px] text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-none file:bg-white file:text-black hover:file:bg-gray-600 file:cursor-pointer"
                 onChange={(e) => handleImageChange(e.target.files)}
               ></input>
             </div>
             <button
               type="submit"
-              className="w-[200px] bg-[#EC4C4C] text-white py-2 rounded-lg hover:bg-red-500 font-semibold"
+              className=" w-[180px] bg-[#EC4C4C] text-xl py-3 rounded-3xl hover:bg-red-500 font-semibold"
             >
               변경 하기
             </button>
