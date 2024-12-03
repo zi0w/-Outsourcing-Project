@@ -1,12 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useRestaurants from '../../hooks/useRestaurants';
 
-const SearchMap = () => {
+const SearchMap = ({ selectedRestaurant }) => {
   const { restaurants } = useRestaurants();
   const { kakao } = window;
   const navigate = useNavigate();
-  const address = '경기도 안산시 상록구 성안길53';
+  const mapRef = useRef(null); // 만들어진 지도 상태 저장
+
   useEffect(() => {
     // 지도를 표시할 컨테이너
     const container = document.getElementById('map');
@@ -16,7 +17,7 @@ const SearchMap = () => {
     };
 
     // 지도 + geocoder 생성
-    const map = new kakao.maps.Map(container, options);
+    mapRef.current = new kakao.maps.Map(container, options);
     const geocoder = new kakao.maps.services.Geocoder();
 
     restaurants.forEach((restaurant) => {
@@ -28,7 +29,7 @@ const SearchMap = () => {
 
           // coords에 마커 생성
           const marker = new kakao.maps.Marker({
-            map: map,
+            map: mapRef.current,
             position: coords
           });
 
@@ -53,14 +54,14 @@ const SearchMap = () => {
           const overlay = new kakao.maps.CustomOverlay({
             content: overlayContent,
             position: coords,
-            map,
+            map: mapRef.current,
             yAnchor: 1.4
           });
 
           overlay.setMap(null); // 초기에는 표시하지 않음
 
           kakao.maps.event.addListener(marker, 'click', () => {
-            overlay.setMap(map);
+            overlay.setMap(mapRef.current);
           });
 
           const closeButton = overlayContent.querySelector('#close-overlay');
@@ -75,7 +76,23 @@ const SearchMap = () => {
         }
       });
     });
-  }, [kakao, address, navigate]);
+  }, [kakao, navigate]);
+
+  useEffect(() => {
+    if (!selectedRestaurant) return;
+
+    const geocoder = new kakao.maps.services.Geocoder();
+    const mapContainer = document.getElementById('map');
+
+    geocoder.addressSearch(selectedRestaurant.address, (result, status) => {
+      if (status === kakao.maps.services.Status.OK) {
+        const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+        mapRef.current.panTo(coords); // 지도 중심
+        mapRef.current.setLevel(2); // 지도 중심을 이동
+      }
+    });
+  }, [selectedRestaurant, kakao]);
 
   return (
     <>

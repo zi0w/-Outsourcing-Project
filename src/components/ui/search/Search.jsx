@@ -3,8 +3,10 @@ import SearchList from './SearchList';
 import SearchButtons from './SearchButtons';
 import useRestaurants from '../../../hooks/useRestaurants';
 import useRestaurantFilters from '../../../hooks/useRestaurantFilters';
+import { useState } from 'react';
 
 const Search = () => {
+  const [selectedRestaurant, setSelectedRestaurant] = useState(null); // 지도에 선택된 가게 포커싱 하기 위한 상태
   const { restaurants, isPending, error } = useRestaurants();
   const { handleColorType, colorFilter, searchText, handleSearch, filterdRestaurants } =
     useRestaurantFilters(restaurants);
@@ -26,12 +28,14 @@ const Search = () => {
           </div>
           <ul className="mt-[20px] flex flex-col gap-[20px] overflow-auto">
             {filterdRestaurants().map((restaurant) => {
-              return <SearchList key={restaurant.id} restaurant={restaurant} />;
+              return (
+                <SearchList key={restaurant.id} restaurant={restaurant} setSelectedRestaurant={setSelectedRestaurant} />
+              );
             })}
           </ul>
         </div>
         <div className="max-w-[794px] w-[794px] bg-[#F9F9F9] h-full rounded-[24px]">
-          <SearchMap />
+          <SearchMap selectedRestaurant={selectedRestaurant} />
         </div>
       </div>
     </div>
