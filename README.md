@@ -88,5 +88,31 @@
 <br/>
 
 # 🌳 프로젝트 구조
-<img width="130" alt="스크린샷 2024-12-04 오후 11 19 25" src="https://github.com/user-attachments/assets/e60b8980-3a20-4e68-835c-3034a7f68576">
-
+```bash
+📦src
+ ┣ 📂components
+ ┃ ┣ 📂common
+ ┃ ┣ 📂features
+ ┃ ┣ 📂layout
+ ┃ ┣ 📂shared
+ ┃ ┗ 📂ui
+ ┃ ┃ ┣ 📂common
+ ┃ ┃ ┣ 📂detail
+ ┃ ┃ ┣ 📂home
+ ┃ ┃ ┣ 📂search
+ ┃ ┃ ┗ 📂signup
+ ┣ 📂hooks
+ ┣ 📂pages
+ ┃ ┣ 📂detail
+ ┃ ┣ 📂home
+ ┃ ┣ 📂profile
+ ┃ ┣ 📂search
+ ┃ ┣ 📂signin
+ ┃ ┗ 📂signup
+ ┣ 📂store
+ ┣ 📂supabase
+ ┣ 📂utils
+ ┣ 📜App.jsx
+ ┣ 📜index.css
+ ┗ 📜main.jsx
+```
