@@ -15,7 +15,6 @@ const RestaurantInfo = ({ id }) => {
 
   const { restaurants, isPending, isError, liked, handleUpdateLike } = useLike(id, user);
 
-  console.log(restaurants);
   const handleLikeUpdate = () => {
     if (!user) {
       Swal.fire({

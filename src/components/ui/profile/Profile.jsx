@@ -1,20 +1,29 @@
 import { useState } from 'react';
-import { useFetchLikes } from '../../../hooks/profile/useFetchLikes';
-import { useFetchComments } from '../../../hooks/profile/useFetchComments';
-import { useUpdateProfile } from '../../../hooks/profile/useUpdateProfile';
-import useAuthStore from '../../../store/authStore';
+
 import CommentsList from './CommentsList';
 import LikesList from './LikesList';
 import MyProfile from './MyProfile';
 import UpdateProfile from './UpdateProfile';
 
+import Loading from '../common/Loading';
+
+import { useFetchLikes } from '../../../hooks/profile/useFetchLikes';
+import { useFetchComments } from '../../../hooks/profile/useFetchComments';
+import { useUpdateProfile } from '../../../hooks/profile/useUpdateProfile';
+
+import useAuthStore from '../../../store/authStore';
+
 const Profile = () => {
   const user = useAuthStore((state) => state.user); //zustand의 로그인 user 정보
+
   const [tab, setTab] = useState('likes'); // 탭을 likes로 기본값 설정
   const [newProfileImg, setNewProfileImg] = useState(''); // 새로 업로드한 이미지 상태
   const [newNickname, setNewNickname] = useState(''); // 새로 입력한 닉네임 상태
+
   const { likes, likesError, likesPending } = useFetchLikes(user.id); // 좋아요 상태 불러오기
+
   const { comments, commentsPending, commentsError } = useFetchComments(user.id); // 리뷰 상태 불러오기
+
   const { handleSubmit } = useUpdateProfile(newNickname, newProfileImg, user);
 
   return (
@@ -48,7 +57,7 @@ const Profile = () => {
         {tab === 'likes' && (
           <>
             {likesPending ? (
-              <p className="font-semibold">로딩 중..</p>
+              <Loading />
             ) : likesError ? (
               <p className="font-semibold">북마크 데이터를 가져오는 중 에러가 발생하였습니다.</p>
             ) : (
@@ -61,7 +70,7 @@ const Profile = () => {
         {tab === 'comments' && (
           <>
             {commentsPending ? (
-              <p className="font-semibold">로딩 중..</p>
+              <Loading />
             ) : commentsError ? (
               <p className="font-semibold">댓글 불러오기 오류 발생..</p>
             ) : (
