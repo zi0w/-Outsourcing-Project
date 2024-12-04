@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useRestaurants from '../../hooks/useRestaurants';
+const { kakao } = window;
 
 const SearchMap = ({ selectedRestaurant }) => {
   const { restaurants } = useRestaurants();
-  const { kakao } = window;
   const navigate = useNavigate();
   const mapRef = useRef(null); // 만들어진 지도 상태 저장
 
