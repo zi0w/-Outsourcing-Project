@@ -34,17 +34,17 @@ const Footer = () => {
 
     <footer className="bg-[#0a0a0a] w-full">
       {/* footer - inner */}
-      <div className="mx-auto w-full max-w-[600px] h-[130px] pt-[30px] text-center">
+      <div className="mx-auto w-full max-w-[600px] py-5 text-center">
         {/* copyright text */}
-        <p className="mb-[15px] text-[#fff] text-[16px] font-medium">
+        <p className="mb-[15px] text-[#ccc] text-sm">
           @ Copyright 2024 pa5rangers. All rights reserved
         </p>
         {/* developer intro */}
-        <ul className="flex justify-between text-[13px]">
+        <div className="flex justify-between text-[13px]">
           {teamMembersInfo.map((member) => (
             <TeamInfo key={member.github} name={member.name} github={member.github} color={member.color} />
           ))}
-        </ul>
+        </div>
       </div>
     </footer>
   );

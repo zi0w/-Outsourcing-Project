@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom';
 
 import HomePage from '../../pages/home/HomePage';
 import SigninPage from '../../pages/signin/SigninPage';
@@ -12,25 +12,22 @@ import useAuthStore from '../../store/authStore';
 const Router = () => {
   const isLogin = useAuthStore((state) => state.isLogin);
 
-  const PublicRoute = ({ element }) => (isLogin ? <Navigate to="/" replace /> : element);
+  const PublicRoute = () => (isLogin ? <Navigate to="/" replace /> : <Outlet />);
 
-  const PrivateRoute = ({ children }) => (isLogin ? children : <Navigate to="/signin" replace />);
+  const PrivateRoute = () => (isLogin ? <Outlet /> : <Navigate to="/signin" replace />);
 
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/signin" element={<PublicRoute element={<SigninPage />} />} />
-          <Route path="/signup" element={<PublicRoute element={<SignupPage />} />} />
-          <Route
-            path="/profile"
-            element={
-              <PrivateRoute>
-                <ProfilePage />
-              </PrivateRoute>
-            }
-          />
+          <Route element={<PublicRoute />}>
+            <Route path="/signin" element={<SigninPage />} />
+            <Route path="/signup" element={<SignupPage />} />
+          </Route>
+          <Route element={<PrivateRoute />}>
+            <Route path="/profile" element={<ProfilePage />} />
+          </Route>
           <Route path="/search" element={<SearchPage />} />
           <Route path="/detail/:id" element={<DetailPage />} />
         </Route>
