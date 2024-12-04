@@ -168,7 +168,7 @@ const ProfilePage = () => {
 
   // supabase likes 테이블 정보 가져오기 API 함수
   const fetchLikes = async ({ queryKey }) => {
-    const [_, userId] = queryKey;
+    const [, userId] = queryKey;
     const { data: likes, error } = await supabase.from('likes').select('*').eq('user_id', userId);
     if (error) {
       console.error('좋아요 가져오기 에러:', error);
@@ -206,7 +206,7 @@ const ProfilePage = () => {
 
   // supabase comments 테이블 정보 가져오기 API 함수
   const fetchComments = async ({ queryKey }) => {
-    const [_, userId] = queryKey;
+    const [, userId] = queryKey;
     const { data: comments, error } = await supabase.from('comments').select('*').eq('user_id', userId);
     if (error) {
       console.error('리뷰 가져오기 에러:', error);
@@ -313,7 +313,14 @@ const ProfilePage = () => {
             ) : likesError ? (
               <p className="font-semibold">북마크 데이터를 가져오는 중 에러가 발생하였습니다.</p>
             ) : (
-              <div className="mt-10 overflow-y-auto overflow-x-hidden h-[280px] pr-2">
+              <div
+                className="mt-10 overflow-y-auto overflow-x-hidden h-[280px] pr-2 
+                          [&::-webkit-scrollbar]:w-2
+                          [&::-webkit-scrollbar-track]:bg-gray-100
+                          [&::-webkit-scrollbar-thumb]:bg-gray-300
+                          dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                          dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+              >
                 <ul className="">
                   {likes.length > 0 ? (
                     likes.map((like) => (
@@ -347,6 +354,7 @@ const ProfilePage = () => {
                           {/* 삭제 버튼 */}
                           <button type="button" onClick={() => confirmDeleteLike(like.id)}>
                             <svg
+                              className="hover:fill-[#EC4C4C]"
                               height="20px"
                               version="1.1"
                               viewBox="0 0 48 48"
@@ -397,7 +405,14 @@ const ProfilePage = () => {
             ) : commentsError ? (
               <p className="font-semibold">댓글 불러오기 오류 발생..</p>
             ) : (
-              <div className="mt-10 overflow-y-auto overflow-x-hidden h-[280px] pr-2">
+              <div
+                className="mt-10 overflow-y-auto overflow-x-hidden h-[280px] pr-2 
+                          [&::-webkit-scrollbar]:w-2
+                          [&::-webkit-scrollbar-track]:bg-gray-100
+                          [&::-webkit-scrollbar-thumb]:bg-gray-300
+                          dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                          dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+              >
                 <ul>
                   {comments.length > 0 ? (
                     comments.map((comment) => (
@@ -432,6 +447,7 @@ const ProfilePage = () => {
                           {/* 삭제 버튼 */}
                           <button type="button" onClick={() => confirmDeleteComment(comment.id)}>
                             <svg
+                              className="hover:fill-[#EC4C4C]"
                               height="20px"
                               version="1.1"
                               viewBox="0 0 48 48"
@@ -476,8 +492,8 @@ const ProfilePage = () => {
 
         {/* 프로필 변경 탭 */}
         {tab === 'profile' && (
-          <form onSubmit={handleSubmit} className="space-y-6 rounded-xl flex flex-col items-center">
-            <div className="w-[500px] flex flex-col items-start mt-12">
+          <form onSubmit={handleSubmit} className="rounded-xl flex flex-col items-center">
+            <div className="w-[500px] flex flex-col items-start mt-4">
               <label className="text-[18px] mb-2">닉네임 변경</label>
               <input
                 type="text"
@@ -489,7 +505,7 @@ const ProfilePage = () => {
             </div>
             <button
               type="submit"
-              className="w-[140px] bg-[#EC4C4C] text-xl py-[10px] rounded-3xl hover:bg-[#B73838] font-semibold"
+              className="w-[120px] mt-10 bg-[#EC4C4C] text-lg py-[6px] rounded-3xl hover:bg-[#B73838] font-semibold"
             >
               변경 하기
             </button>
