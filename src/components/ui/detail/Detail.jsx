@@ -7,7 +7,7 @@ import Comments from './Comments';
 import RestaurantInfo from './RestaurantInfo';
 
 const Detail = () => {
-  const { id } = useParams();
+  // const { id } = useParams();
 
   return (
     <section>
@@ -15,16 +15,16 @@ const Detail = () => {
         <div className="w-full h-full p-[40px] flex flex-row gap-[40px]">
           {/* 식당 정보 */}
           <div className="max-w-[520px] w-full flex flex-col gap-[40px]">
-            <RestaurantInfo id={id} />
+            <RestaurantInfo id={'0c67a5e8-eef2-4995-a5bf-a14d6910ad0a'} />
 
             <div className="w-full h-[760px] rounded-[24px] px-[40px] pt-[38.12px] pb-[35.77px] bg-white overflow-hidden relative">
-              <CommentForm id={id} />
-              <Comments id={id} />
+              <CommentForm id={'0c67a5e8-eef2-4995-a5bf-a14d6910ad0a'} />
+              <Comments id={'0c67a5e8-eef2-4995-a5bf-a14d6910ad0a'} />
             </div>
           </div>
 
           {/* 식당 위치 */}
-          <DetailMap id={id} />
+          <DetailMap id={'0c67a5e8-eef2-4995-a5bf-a14d6910ad0a'} />
         </div>
       </div>
     </section>
