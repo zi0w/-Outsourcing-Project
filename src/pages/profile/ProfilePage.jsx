@@ -7,14 +7,16 @@ import Swal from 'sweetalert2';
 
 const ProfilePage = () => {
   const queryClient = useQueryClient();
-  const user = useAuthStore((state) => state.user);
-  const [tab, setTab] = useState('likes');
-  const [newProfileImg, setNewProfileImg] = useState('');
-  const [newNickname, setNewNickname] = useState('');
+  const user = useAuthStore((state) => state.user); //zustand의 로그인 user 정보
+  const [tab, setTab] = useState('likes'); // 탭을 likes로 기본값 설정
+  const [newProfileImg, setNewProfileImg] = useState(''); // 새로 업로드한 이미지 상태
+  const [newNickname, setNewNickname] = useState(''); // 새로 입력한 닉네임 상태
 
+  // 프로필 이미지 업로드 함수
   const handleImageChange = async (files) => {
     const file = files[0];
 
+    // 파일을 선택하지 않은 경우 함수 종료
     if (!file) {
       return;
     }
@@ -22,26 +24,55 @@ const ProfilePage = () => {
     // 브라우저에서 업로드된 파일의 임시 URL 생성
     const tempImgUrl = URL.createObjectURL(file);
 
-    // 낙관적으로 UI에 즉시 반영
+    // UI에 즉시 반영 (낙관적)
     setNewProfileImg(tempImgUrl);
 
+    // supabase storage에 이미지 업로드
     const { data } = await supabase.storage.from('profile_img').upload(`profile_img${Date.now()}.png`, file);
     const newImg = `https://zvnqewxnkcdqqlskzqlz.supabase.co/storage/v1/object/public/profile_img/${data.path}`;
-    setNewProfileImg(newImg);
+
+    setNewProfileImg(newImg); // 업로드 된 이미지 URL로 상태 업데이트
   };
 
-  const handleSubmit = (e) => {
+  // 프로필 정보 변경
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    //update user 함수 호출해서 매개변수로 로그인 유저정보 넘기기
-    updateUserInfo(user.id);
-    Swal.fire({
-      icon: 'success',
-      title: '프로필 변경 성공!',
-      confirmButtonColor: '#429f50'
+
+    // 닉네임 입력이 비어있는 경우 예외 처리
+    if (!newNickname.trim()) {
+      Swal.fire({
+        icon: 'error',
+        title: '닉네임을 입력해주세요.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
+    // sweetalert
+    const result = await Swal.fire({
+      icon: 'warning',
+      title: '프로필을 변경하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonColor: '#429f50',
+      cancelButtonColor: '#d33',
+      confirmButtonText: '변경',
+      cancelButtonText: '취소'
     });
+
+    if (result.isConfirmed) {
+      // Supabase에 업데이트 요청
+      await updateUserInfo(user.id);
+
+      // 성공 메시지 sweetalert
+      Swal.fire({
+        icon: 'success',
+        title: '프로필 변경 성공!',
+        confirmButtonColor: '#429f50'
+      });
+    }
   };
 
-  // 유저 정보 업데이트
+  // supabase users 테이블 업데이트
   const updateUserInfo = async (currentUserId) => {
     const { error } = await supabase
       .from('users')
@@ -51,54 +82,100 @@ const ProfilePage = () => {
       })
       .eq('id', currentUserId);
 
-    if (error) console.error('유저 정보 업데이트 에러:', error);
+    if (error) {
+      console.error('유저 정보 업데이트 에러:', error);
+    } else {
+      // zustand 상태 업데이트 및 캐시 무효화
+      useAuthStore.getState().updateProfile(newNickname, newProfileImg);
+      queryClient.invalidateQueries(['users', currentUserId]);
+    }
   };
 
-  // 리뷰 삭제하기
+  // supabase comments 테이블 삭제 API 함수
   const deleteComment = async (CommentId) => {
     const { error } = await supabase.from('comments').delete().eq('id', CommentId);
     if (error) console.error('리뷰 삭제 에러:', error);
   };
 
+  // tanstack query로 supabase comments 테이블 상태 관리
   const handleCommentDelete = useMutation({
+    // 댓글 삭제 API 함수 호출
     mutationFn: (commentId) => deleteComment(commentId),
     onSuccess: () => {
-      Swal.fire({
-        icon: 'success',
-        title: '리뷰 삭제 완료!',
-        confirmButtonColor: '#429f50'
-      });
+      // 삭제 성공 시, 캐시 무효화
       queryClient.invalidateQueries(['comments', user.id]);
     }
   });
 
-  // 좋아요 삭제하기
+  // 리뷰 삭제 sweetalert
+  const confirmDeleteComment = (commentId) => {
+    Swal.fire({
+      icon: 'warning',
+      title: '정말 삭제하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleCommentDelete.mutate(commentId);
+        Swal.fire({
+          icon: 'success',
+          title: '삭제 완료!',
+          confirmButtonColor: '#429f50'
+        });
+      }
+    });
+  };
+
+  // supabase likes 테이블 삭제 API 함수
   const deleteLike = async (likeId) => {
     const { error } = await supabase.from('likes').delete().eq('id', likeId);
     if (error) console.error('좋아요 삭제 에러:', error);
   };
 
+  // tanstack query로 supabase likse 테이블 상태 관리
   const handleLikeDelete = useMutation({
     mutationFn: (likeId) => deleteLike(likeId),
     onSuccess: () => {
-      Swal.fire({
-        icon: 'success',
-        title: '즐겨찾기 삭제 완료!',
-        confirmButtonColor: '#429f50'
-      });
+      //성공 시, 캐시 무효화
       queryClient.invalidateQueries([`likes`, user.id]);
     }
   });
 
-  // 좋아요 가져오기
+  // 좋아요 매장 삭제 sweetalert
+  const confirmDeleteLike = (likeId) => {
+    Swal.fire({
+      icon: 'warning',
+      title: '정말 삭제하시겠습니까?',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: '삭제',
+      cancelButtonText: '취소'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleLikeDelete.mutate(likeId);
+        Swal.fire({
+          icon: 'success',
+          title: '즐겨찾기 삭제 완료!',
+          confirmButtonColor: '#429f50'
+        });
+      }
+    });
+  };
+
+  // supabase likes 테이블 정보 가져오기 API 함수
   const fetchLikes = async ({ queryKey }) => {
-    const [_, userId] = queryKey;
+    const [, userId] = queryKey;
     const { data: likes, error } = await supabase.from('likes').select('*').eq('user_id', userId);
     if (error) {
       console.error('좋아요 가져오기 에러:', error);
       return [];
     }
 
+    // 로그인한 유저가 좋아요 한 매장의 추가 정보를 데이터에 추가
     const getLikeRestaurants = await Promise.all(
       likes.map(async (like) => {
         const { data: restaurants, error: restaurantsError } = await supabase
@@ -117,6 +194,7 @@ const ProfilePage = () => {
     return getLikeRestaurants;
   };
 
+  // tanstack query를 이용항여 유저가 좋아요 한 매장의 데이터를 fetch
   const {
     data: likes,
     isPending: likesPending,
@@ -126,15 +204,16 @@ const ProfilePage = () => {
     queryFn: fetchLikes
   });
 
-  // 리뷰 가져오기
+  // supabase comments 테이블 정보 가져오기 API 함수
   const fetchComments = async ({ queryKey }) => {
-    const [_, userId] = queryKey;
+    const [, userId] = queryKey;
     const { data: comments, error } = await supabase.from('comments').select('*').eq('user_id', userId);
     if (error) {
       console.error('리뷰 가져오기 에러:', error);
       return [];
     }
 
+    // 로그인한 유저가 작성한 리뷰에 매장 정보를 추가
     const getRestaurantComments = await Promise.all(
       comments.map(async (comment) => {
         const { data: restaurant, error: restaurantError } = await supabase
@@ -154,6 +233,7 @@ const ProfilePage = () => {
     return getRestaurantComments;
   };
 
+  // tanstack query를 사용하여 유저가 작성한 리뷰 데이터 fetch
   const {
     data: comments,
     isPending: commentsPending,
@@ -162,19 +242,6 @@ const ProfilePage = () => {
     queryKey: ['getRestaurantComments', user.id],
     queryFn: fetchComments
   });
-
-  // 시간 변경 함수
-  const formatCustomDateTime = (writingTime) => {
-    const date = new Date(writingTime);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  };
 
   useEffect(() => {
     let tempUrl;
@@ -192,12 +259,25 @@ const ProfilePage = () => {
   }, [newProfileImg]);
 
   return (
-    <section className="h-[calc(100vh-230px)] bg-gray-500 text-white flex-col items-center pt-14">
+    // 유저 프로필 정보
+    <section className="h-[calc(100vh-163px)] text-white flex-col items-center pt-36">
       <div className="text-center">
-        <img
-          src={newProfileImg || user.profile_image_url || defaultImg}
-          alt="프로필 사진"
-          className="w-[138px] h-[138px] mx-auto rounded-full"
+        <label htmlFor="imgFile" className="relative group cursor-pointer block w-[138px] h-[138px] mx-auto">
+          <img
+            src={newProfileImg || user.profile_image_url || defaultImg}
+            alt="프로필 사진"
+            className="w-full h-full object-cover rounded-full"
+          />
+          <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-full">
+            <span className="text-white text-4xl font-bold">+</span>
+          </div>
+        </label>
+        <input
+          id="imgFile"
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={(e) => handleImageChange(e.target.files)}
         />
         <h1 className="text-black mt-[20px] text-white font-medium text-[20px]">{user.nickname}</h1>
       </div>
@@ -224,7 +304,7 @@ const ProfilePage = () => {
         </button>
       </div>
 
-      {/* content */}
+      {/* 좋아요 매장 리스트 */}
       <div className="flex justify-center text-center mx-auto overflow-x-hidden">
         {tab === 'likes' && (
           <>
@@ -233,7 +313,14 @@ const ProfilePage = () => {
             ) : likesError ? (
               <p className="font-semibold">북마크 데이터를 가져오는 중 에러가 발생하였습니다.</p>
             ) : (
-              <div className="mt-10 overflow-y-auto h-[280px] pr-2">
+              <div
+                className="mt-10 overflow-y-auto overflow-x-hidden h-[280px] pr-2 
+                          [&::-webkit-scrollbar]:w-2
+                          [&::-webkit-scrollbar-track]:bg-gray-100
+                          [&::-webkit-scrollbar-thumb]:bg-gray-300
+                          dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                          dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+              >
                 <ul className="">
                   {likes.length > 0 ? (
                     likes.map((like) => (
@@ -252,7 +339,9 @@ const ProfilePage = () => {
                             <p>{like.restaurants?.address}</p>
                           </div>
                         </div>
-                        <div className="flex w-full justify-between items-center pl-[60px] mt-1">
+
+                        {/* 영업 시간 */}
+                        <div className="flex w-full justify-between items-center pl-[60px] mt-2">
                           {like.restaurants?.operating_time.length > 1 ? (
                             <div className="flex gap-3">
                               <p>평일:{like.restaurants?.operating_time[0]}</p>
@@ -261,8 +350,11 @@ const ProfilePage = () => {
                           ) : (
                             <p>평일,주말:{like.restaurants?.operating_time[0]}</p>
                           )}
-                          <button type="button" onClick={() => handleLikeDelete.mutate(like.id)}>
+
+                          {/* 삭제 버튼 */}
+                          <button type="button" onClick={() => confirmDeleteLike(like.id)}>
                             <svg
+                              className="hover:fill-[#EC4C4C]"
                               height="20px"
                               version="1.1"
                               viewBox="0 0 48 48"
@@ -304,6 +396,8 @@ const ProfilePage = () => {
             )}
           </>
         )}
+
+        {/* 리뷰 리스트 */}
         {tab === 'comments' && (
           <>
             {commentsPending ? (
@@ -311,7 +405,14 @@ const ProfilePage = () => {
             ) : commentsError ? (
               <p className="font-semibold">댓글 불러오기 오류 발생..</p>
             ) : (
-              <div className="mt-10 overflow-y-auto h-[280px] pr-4">
+              <div
+                className="mt-10 overflow-y-auto overflow-x-hidden h-[280px] pr-2 
+                          [&::-webkit-scrollbar]:w-2
+                          [&::-webkit-scrollbar-track]:bg-gray-100
+                          [&::-webkit-scrollbar-thumb]:bg-gray-300
+                          dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+                          dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+              >
                 <ul>
                   {comments.length > 0 ? (
                     comments.map((comment) => (
@@ -319,7 +420,7 @@ const ProfilePage = () => {
                         key={comment.id}
                         className="w-[700px] p-4 flex flex-col items-start rounded-xl mb-8 text-black bg-white"
                       >
-                        <div className="flex flex-row justify-start">
+                        <div className="flex items-center">
                           <img
                             src={newProfileImg || user.profile_image_url || defaultImg}
                             className="w-12 h-12 rounded-full"
@@ -330,10 +431,23 @@ const ProfilePage = () => {
                             <p>{comment.comment}</p>
                           </div>
                         </div>
-                        <div className="w-full flex justify-between pl-[60px] mt-2">
-                          <p className="">{formatCustomDateTime(comment.created_at)}</p>
-                          <button type="button" onClick={() => handleCommentDelete.mutate(comment.id)}>
+
+                        {/* 타임 스탬프 */}
+                        <div className="w-full flex justify-between items-center pl-[60px] mt-2">
+                          <p className="">
+                            {new Date(comment.created_at).toLocaleDateString('ko-KR', {
+                              year: 'numeric',
+                              month: '2-digit',
+                              day: '2-digit',
+                              hour: '2-digit',
+                              minute: '2-digit'
+                            })}
+                          </p>
+
+                          {/* 삭제 버튼 */}
+                          <button type="button" onClick={() => confirmDeleteComment(comment.id)}>
                             <svg
+                              className="hover:fill-[#EC4C4C]"
                               height="20px"
                               version="1.1"
                               viewBox="0 0 48 48"
@@ -375,10 +489,12 @@ const ProfilePage = () => {
             )}
           </>
         )}
+
+        {/* 프로필 변경 탭 */}
         {tab === 'profile' && (
-          <form onSubmit={handleSubmit} className="space-y-6 rounded-xl flex flex-col items-center">
+          <form onSubmit={handleSubmit} className="rounded-xl flex flex-col items-center">
             <div className="w-[500px] flex flex-col items-start mt-4">
-              <label className="font-[26px] mb-2">닉네임 변경</label>
+              <label className="text-[18px] mb-2">닉네임 변경</label>
               <input
                 type="text"
                 value={newNickname}
@@ -387,17 +503,9 @@ const ProfilePage = () => {
                 onChange={(e) => setNewNickname(e.target.value)}
               />
             </div>
-            <div className="w-[500px] flex flex-col items-start">
-              <label className="font-[26px] mb-2">프로필 이미지 변경</label>
-              <input
-                type="file"
-                className="mt-1 block w-[250px] text-sm text-black file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-none file:bg-white file:text-black hover:file:bg-gray-600 file:cursor-pointer"
-                onChange={(e) => handleImageChange(e.target.files)}
-              ></input>
-            </div>
             <button
               type="submit"
-              className="w-[150px] bg-[#EC4C4C] text-xl py-3 rounded-3xl hover:bg-[#B73838] font-semibold"
+              className="w-[120px] mt-10 bg-[#EC4C4C] text-lg py-[6px] rounded-3xl hover:bg-[#B73838] font-semibold"
             >
               변경 하기
             </button>

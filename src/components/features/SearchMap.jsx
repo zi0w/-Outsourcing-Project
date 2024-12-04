@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useRestaurants from '../../hooks/useRestaurants';
 
@@ -54,11 +54,9 @@ const SearchMap = ({ selectedRestaurant }) => {
           const overlay = new kakao.maps.CustomOverlay({
             content: overlayContent,
             position: coords,
-            map: mapRef.current,
+            map: null,
             yAnchor: 1.4
           });
-
-          overlay.setMap(null); // 초기에는 표시하지 않음
 
           kakao.maps.event.addListener(marker, 'click', () => {
             overlay.setMap(mapRef.current);
@@ -82,14 +80,13 @@ const SearchMap = ({ selectedRestaurant }) => {
     if (!selectedRestaurant) return;
 
     const geocoder = new kakao.maps.services.Geocoder();
-    const mapContainer = document.getElementById('map');
 
     geocoder.addressSearch(selectedRestaurant.address, (result, status) => {
       if (status === kakao.maps.services.Status.OK) {
         const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-        mapRef.current.panTo(coords); // 지도 중심
-        mapRef.current.setLevel(2); // 지도 중심을 이동
+        mapRef.current.panTo(coords); // 지도 중심으로 이동
+        mapRef.current.setLevel(2); // 지도 확대
       }
     });
   }, [selectedRestaurant, kakao]);

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 const HeaderDropdown = () => {
@@ -9,7 +8,7 @@ const HeaderDropdown = () => {
     navigate('/');
   };
   return (
-    <div className="absolute flex flex-col mt-2 right-0 top-full rounded-md bg-white">
+    <div className="absolute z-10 flex flex-col mt-2 right-0 top-full rounded-md bg-white">
       <Link to="/profile" className="px-3 py-2 text-black hover:text-[#EC4C4C] font-bold">
         마이페이지
       </Link>

@@ -9,8 +9,7 @@ const useDetailRestaurant = () => {
 
     if (error) {
       throw new Error(error.message);
-    }
-    console.log('FetchRestaurantInfo:', data);
+    }    
     return data;
   };
 
