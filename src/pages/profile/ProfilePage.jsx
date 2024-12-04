@@ -7,14 +7,16 @@ import Swal from 'sweetalert2';
 
 const ProfilePage = () => {
   const queryClient = useQueryClient();
-  const user = useAuthStore((state) => state.user);
-  const [tab, setTab] = useState('likes');
-  const [newProfileImg, setNewProfileImg] = useState('');
-  const [newNickname, setNewNickname] = useState('');
+  const user = useAuthStore((state) => state.user); //zustand의 로그인 user 정보
+  const [tab, setTab] = useState('likes'); // 탭을 likes로 기본값 설정
+  const [newProfileImg, setNewProfileImg] = useState(''); // 새로 업로드한 이미지 상태
+  const [newNickname, setNewNickname] = useState(''); // 새로 입력한 닉네임 상태
 
+  // 프로필 이미지 업로드 함수
   const handleImageChange = async (files) => {
     const file = files[0];
 
+    // 파일을 선택하지 않은 경우 함수 종료
     if (!file) {
       return;
     }
@@ -22,18 +24,21 @@ const ProfilePage = () => {
     // 브라우저에서 업로드된 파일의 임시 URL 생성
     const tempImgUrl = URL.createObjectURL(file);
 
-    // 낙관적으로 UI에 즉시 반영
+    // UI에 즉시 반영 (낙관적)
     setNewProfileImg(tempImgUrl);
 
+    // supabase storage에 이미지 업로드
     const { data } = await supabase.storage.from('profile_img').upload(`profile_img${Date.now()}.png`, file);
     const newImg = `https://zvnqewxnkcdqqlskzqlz.supabase.co/storage/v1/object/public/profile_img/${data.path}`;
-    setNewProfileImg(newImg);
+
+    setNewProfileImg(newImg); // 업로드 된 이미지 URL로 상태 업데이트
   };
 
+  // 프로필 정보 변경
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //update user 함수 호출해서 매개변수로 로그인 유저정보 넘기기
 
+    // sweetalert
     const result = await Swal.fire({
       icon: 'warning',
       title: '프로필을 변경하시겠습니까?',
@@ -48,7 +53,7 @@ const ProfilePage = () => {
       // Supabase에 업데이트 요청
       await updateUserInfo(user.id);
 
-      // SweetAlert 성공 메시지
+      // 성공 메시지 sweetalert
       Swal.fire({
         icon: 'success',
         title: '프로필 변경 성공!',
@@ -57,7 +62,7 @@ const ProfilePage = () => {
     }
   };
 
-  // 유저 정보 업데이트
+  // supabase users 테이블 업데이트
   const updateUserInfo = async (currentUserId) => {
     const { error } = await supabase
       .from('users')
@@ -70,24 +75,29 @@ const ProfilePage = () => {
     if (error) {
       console.error('유저 정보 업데이트 에러:', error);
     } else {
+      // zustand 상태 업데이트 및 캐시 무효화
       useAuthStore.getState().updateProfile(newNickname, newProfileImg);
       queryClient.invalidateQueries(['users', currentUserId]);
     }
   };
 
-  // 리뷰 삭제하기
+  // supabase comments 테이블 삭제 API 함수
   const deleteComment = async (CommentId) => {
     const { error } = await supabase.from('comments').delete().eq('id', CommentId);
     if (error) console.error('리뷰 삭제 에러:', error);
   };
 
+  // tanstack query로 supabase comments 테이블 상태 관리
   const handleCommentDelete = useMutation({
+    // 댓글 삭제 API 함수 호출
     mutationFn: (commentId) => deleteComment(commentId),
     onSuccess: () => {
+      // 삭제 성공 시, 캐시 무효화
       queryClient.invalidateQueries(['comments', user.id]);
     }
   });
 
+  // 리뷰 삭제 sweetalert
   const confirmDeleteComment = (commentId) => {
     Swal.fire({
       icon: 'warning',
@@ -109,19 +119,22 @@ const ProfilePage = () => {
     });
   };
 
-  // 좋아요 삭제하기
+  // supabase likes 테이블 삭제 API 함수
   const deleteLike = async (likeId) => {
     const { error } = await supabase.from('likes').delete().eq('id', likeId);
     if (error) console.error('좋아요 삭제 에러:', error);
   };
 
+  // tanstack query로 supabase likse 테이블 상태 관리
   const handleLikeDelete = useMutation({
     mutationFn: (likeId) => deleteLike(likeId),
     onSuccess: () => {
+      //성공 시, 캐시 무효화
       queryClient.invalidateQueries([`likes`, user.id]);
     }
   });
 
+  // 좋아요 매장 삭제 sweetalert
   const confirmDeleteLike = (likeId) => {
     Swal.fire({
       icon: 'warning',
@@ -143,7 +156,7 @@ const ProfilePage = () => {
     });
   };
 
-  // 좋아요 가져오기
+  // supabase likes 테이블 정보 가져오기 API 함수
   const fetchLikes = async ({ queryKey }) => {
     const [_, userId] = queryKey;
     const { data: likes, error } = await supabase.from('likes').select('*').eq('user_id', userId);
@@ -152,6 +165,7 @@ const ProfilePage = () => {
       return [];
     }
 
+    // 로그인한 유저가 좋아요 한 매장의 추가 정보를 데이터에 추가
     const getLikeRestaurants = await Promise.all(
       likes.map(async (like) => {
         const { data: restaurants, error: restaurantsError } = await supabase
@@ -170,6 +184,7 @@ const ProfilePage = () => {
     return getLikeRestaurants;
   };
 
+  // tanstack query를 이용항여 유저가 좋아요 한 매장의 데이터를 fetch
   const {
     data: likes,
     isPending: likesPending,
@@ -179,7 +194,7 @@ const ProfilePage = () => {
     queryFn: fetchLikes
   });
 
-  // 리뷰 가져오기
+  // supabase comments 테이블 정보 가져오기 API 함수
   const fetchComments = async ({ queryKey }) => {
     const [_, userId] = queryKey;
     const { data: comments, error } = await supabase.from('comments').select('*').eq('user_id', userId);
@@ -188,6 +203,7 @@ const ProfilePage = () => {
       return [];
     }
 
+    // 로그인한 유저가 작성한 리뷰에 매장 정보를 추가
     const getRestaurantComments = await Promise.all(
       comments.map(async (comment) => {
         const { data: restaurant, error: restaurantError } = await supabase
@@ -207,6 +223,7 @@ const ProfilePage = () => {
     return getRestaurantComments;
   };
 
+  // tanstack query를 사용하여 유저가 작성한 리뷰 데이터 fetch
   const {
     data: comments,
     isPending: commentsPending,
