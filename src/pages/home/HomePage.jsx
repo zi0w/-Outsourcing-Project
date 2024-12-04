@@ -2,6 +2,7 @@ import { useLocation } from 'react-router-dom';
 import Home from '../../components/ui/home/Home';
 import { useEffect } from 'react';
 import supabase from '../../supabase/supabase';
+import useAuthStore from "../../store/authStore";
 
 const HomePage = () => {
   const location = useLocation();
@@ -12,7 +13,6 @@ const HomePage = () => {
     }
 
     const accessToken = new URLSearchParams(location.hash.slice(1)).get('access_token'); // URLSearchParams : 쿼리 파라미터를 쉽게 관리
-
     if (!accessToken) {
       console.error('Access token not found in URL');
       return;
@@ -42,6 +42,7 @@ const HomePage = () => {
         if (error) {
           console.error('Error saving user to database:', error);
         }
+        useAuthStore.getState().updateUser(id);
       };
 
       await saveUserToDatabase(user);
