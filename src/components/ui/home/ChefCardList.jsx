@@ -6,7 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import filterRestaurantInfo from './filterRestaurantInfo';
 import { CustomPrevArrow, CustomNextArrow } from './CustomArrows';
 
-const ChefTiles = ({ restaurantInfo, color }) => {
+const ChefCardList = ({ restaurantInfo, color }) => {
   const filteredInfo = filterRestaurantInfo(restaurantInfo, color);
   const [currentRestaurant, setCurrentRestaurant] = useState(null);
   // 상세페이지로 이동하기 위한 useParams
@@ -59,7 +59,7 @@ const ChefTiles = ({ restaurantInfo, color }) => {
     <div className="w-full max-w-6xl mx-auto">
       <div className="mb-10 flex justify-center">
         <select
-          id="slide-select"
+          id={color}
           onChange={handleSlideChange}
           className={`
             ${color === 'black' ? `black-section-select-design` : `white-section-select-design`}`}
@@ -99,4 +99,4 @@ const ChefTiles = ({ restaurantInfo, color }) => {
   );
 };
 
-export default ChefTiles;
+export default ChefCardList;
