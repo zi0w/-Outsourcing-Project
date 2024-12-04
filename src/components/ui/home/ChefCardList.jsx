@@ -66,12 +66,12 @@ const ChefCardList = ({ restaurantInfo, color }) => {
     <div className="w-full max-w-6xl mx-auto">
       {/* selector */}
       <div className="mb-10 flex justify-center">
-        <SliderSelector color={color} filteredInfo={filteredInfo} />
+        <SliderSelector color={color} filteredInfo={filteredInfo} sliderRef={sliderRef} />
       </div>
 
       {/* Slider */}
       <div className=" mx-auto max-w-[1440px] ">
-        <Slider ref={sliderRef} {...(color === 'black' ? whiteSettings :  blackSettings)}>
+        <Slider ref={sliderRef} {...(color === 'black' ? whiteSettings : blackSettings)}>
           {/* ChefCard */}
           {filteredInfo.map((info) => (
             <ChefCardItem key={info.id} info={info} color={color} />

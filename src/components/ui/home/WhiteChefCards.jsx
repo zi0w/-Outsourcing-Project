@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import useDetailRestaurant from './useDetailRestaurant';
 import ChefCardList from './ChefCardList';
 
