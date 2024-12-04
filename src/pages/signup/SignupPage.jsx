@@ -67,7 +67,7 @@ const SignupPage = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-[calc(100vh-165px)]">
       <div className="p-[60px] bg-white w-[500px] rounded-3xl text-center">
         <h2 className="mb-5 text-4xl font-bold">회원가입</h2>
         <AuthForm mode="signup" onSubmit={handleSignup} />
