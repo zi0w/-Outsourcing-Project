@@ -10,7 +10,7 @@ const useRestaurantFilters = (restaurants) => {
   const handleSearch = (e) => setSearchText(e.target.value);
 
   // 상태에 따라 다르게 필터를 돌려 레스토랑 데이터 뽑기
-  const filterdRestaurants = () => {
+  const filteredRestaurants = () => {
     let filtered = restaurants;
 
     // 검색 필터 적용
@@ -29,7 +29,7 @@ const useRestaurantFilters = (restaurants) => {
         return filtered;
     }
   };
-  return { handleColorType, colorFilter, searchText, handleSearch, filterdRestaurants };
+  return { handleColorType, colorFilter, searchText, handleSearch, filteredRestaurants };
 };
 
 export default useRestaurantFilters;

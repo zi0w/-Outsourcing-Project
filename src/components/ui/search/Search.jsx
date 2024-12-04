@@ -4,21 +4,22 @@ import SearchButtons from './SearchButtons';
 import useRestaurants from '../../../hooks/useRestaurants';
 import useRestaurantFilters from '../../../hooks/useRestaurantFilters';
 import { useState } from 'react';
+import Loading from '../common/Loading';
 
 const Search = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null); // 지도에 선택된 가게 포커싱 하기 위한 상태
   const { restaurants, isPending, error } = useRestaurants();
-  const { handleColorType, colorFilter, searchText, handleSearch, filterdRestaurants } =
+  const { handleColorType, colorFilter, searchText, handleSearch, filteredRestaurants } =
     useRestaurantFilters(restaurants);
 
-  if (isPending) return <div>로딩 중...</div>;
+  if (isPending) return <Loading />;
   if (error) {
     console.error(error);
     return <div>에러가 발생했습니다: {error.message}</div>;
   }
 
   return (
-    <div className="bg-[#0E0E0E] h-screen">
+    <div className="h-screen">
       <div className="max-w-[1440px] w-full h-full p-[40px] m-auto flex flex-row gap-[40px]">
         <div className="max-w-[520px] bg-[#F9F9F9] border rounded-[24px] h-full p-[20px] flex flex-col">
           <SearchButtons handleColorType={handleColorType} colorFilter={colorFilter} />
@@ -33,7 +34,7 @@ const Search = () => {
 dark:[&::-webkit-scrollbar-track]:bg-neutral-700
 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
           >
-            {filterdRestaurants().map((restaurant) => {
+            {filteredRestaurants().map((restaurant) => {
               return (
                 <SearchList key={restaurant.id} restaurant={restaurant} setSelectedRestaurant={setSelectedRestaurant} />
               );
