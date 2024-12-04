@@ -12,7 +12,7 @@ import useAuthStore from '../../store/authStore';
 const Router = () => {
   const isLogin = useAuthStore((state) => state.isLogin);
 
-  const PublicRoute = () => (isLogin ? <Navigate to="/" replace /> : <Outlet />);
+  const GuestRoute = () => (isLogin ? <Navigate to="/" replace /> : <Outlet />);
 
   const PrivateRoute = () => (isLogin ? <Outlet /> : <Navigate to="/signin" replace />);
 
@@ -21,7 +21,7 @@ const Router = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<HomePage />} />
-          <Route element={<PublicRoute />}>
+          <Route element={<GuestRoute />}>
             <Route path="/signin" element={<SigninPage />} />
             <Route path="/signup" element={<SignupPage />} />
           </Route>
