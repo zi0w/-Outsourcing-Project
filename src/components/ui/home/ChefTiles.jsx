@@ -4,6 +4,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import { Link, useParams } from 'react-router-dom';
 import filterRestaurantInfo from './filterRestaurantInfo';
+import { CustomPrevArrow, CustomNextArrow } from './CustomArrows';
 
 const ChefTiles = ({ restaurantInfo, color }) => {
   const filteredInfo = filterRestaurantInfo(restaurantInfo, color);
@@ -27,6 +28,8 @@ const ChefTiles = ({ restaurantInfo, color }) => {
     speed: 700, // 슬라이드 전환 속도
     slidesToShow: 3, // 한 화면에 보여줄 슬라이드 수
     slidesToScroll: 3, // 한 번에 스크롤할 슬라이드 수
+    prevArrow: <CustomPrevArrow />,
+    nextArrow: <CustomNextArrow />,
     responsive: [
       {
         breakpoint: 1024, // 화면 크기가 1024px 이하일 때
@@ -54,7 +57,7 @@ const ChefTiles = ({ restaurantInfo, color }) => {
 
   return (
     <div className="w-full max-w-6xl mx-auto">
-      <div className="mb-6 flex justify-center">
+      <div className="mb-10 flex justify-center">
         <select
           id="slide-select"
           onChange={handleSlideChange}
@@ -68,29 +71,30 @@ const ChefTiles = ({ restaurantInfo, color }) => {
           ))}
         </select>
       </div>
-      <Slider ref={sliderRef} {...settings}>
-        {filteredInfo.map((info) => (
-          <div>
-            <div key={info.id} className="relative group">
-              <div className="p-4">
-                <div className="w-full max-w-[320px] h-[320px] overflow-hidden rounded-lg shadow-md mx-auto">
-                  <img src={info.image_url} alt={`${info.name}`} className="w-full h-full object-cover scale-110" />
+
+      <div className=" mx-auto max-w-[1440px] ">
+        <Slider ref={sliderRef} {...settings}>
+          {filteredInfo.map((info) => (
+            <div key={info.id} className="relative group w-full max-w-[320px] h-[320px] ml-8">
+              <div>
+                <div className="overflow-hidden rounded-[16px] w-[320px] h-[320px] shadow-[0_8px_8px_rgba(0,0,0,0.5)]">
+                  <img src={info.image_url} alt={`${info.name}`} className="w-full h-full object-cover scale-110 " />
                 </div>
               </div>
-                <Link to={`/details/${info.id}`}>
-              <div className="absolute top-4 left-8 w-[320px] h-[320px] bg-[rgba(0,0,0,0.7)] rounded-[8px] px-10 text-[#fff] opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <Link to={`/details/${info.id}`}>
+                <div className="absolute top-0 left-0 w-[320px] h-[320px] bg-[rgba(0,0,0,0.7)] rounded-[16px] px-10 text-[#fff] opacity-0 group-hover:opacity-100 transition-opacity duration-200 shadow-xl">
                   <div className="w-full h-auto mt-20">
                     <p className="text-[16px]">{info.description}</p>
                   </div>
-              </div>
-                </Link>
-              <h3 className={`text-center text-[21px] ${color === 'black' ? `font-bold` : `font-medium`}`}>
+                </div>
+              </Link>
+              <h3 className={`text-center text-[21px] mt-4 ${color === 'black' ? 'font-bold' : 'font-medium'}`}>
                 {info.name}
               </h3>
             </div>
-          </div>
-        ))}
-      </Slider>
+          ))}
+        </Slider>
+      </div>
     </div>
   );
 };
