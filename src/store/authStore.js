@@ -63,7 +63,7 @@ const authStore = persist(
         const { user } = googleUser;
 
         if (error) throw new Error(error.message);
-        
+
         // users 테이블에서 사용자 정보 가져오기
         const { data, error: userError } = await supabase
           .from('users')
@@ -87,6 +87,16 @@ const authStore = persist(
         console.error('Google login error:', error.message);
         throw new Error(error.message);
       }
+    },
+
+    updateProfile: (nickname, profileImg) => {
+      set((state) => ({
+        user: {
+          ...state.user,
+          nickname: nickname || state.user.nickname,
+          profile_image_url: profileImg || state.user.profile_image_url
+        }
+      }));
     },
 
     //로그아웃
