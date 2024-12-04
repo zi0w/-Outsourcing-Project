@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+
 import { useParams } from 'react-router-dom';
 
 import CommentForm from '../../features/CommentForm';
@@ -9,9 +11,13 @@ import RestaurantInfo from './RestaurantInfo';
 const Detail = () => {
   const { id } = useParams();
 
+  useEffect(() => {
+    scrollTo(0, 0);
+  }, []);
+
   return (
     <section>
-      <div className="m-auto max-w-[1440px] w-full h-screen bg-black">
+      <div className="m-auto max-w-[1440px] w-full h-screen">
         <div className="w-full h-full p-[40px] flex flex-row gap-[40px]">
           {/* 식당 정보 */}
           <div className="max-w-[520px] w-full flex flex-col gap-[40px]">

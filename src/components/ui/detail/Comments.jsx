@@ -1,5 +1,7 @@
 import CommentBox from './CommentBox';
 
+import Loading from '../common/Loading';
+
 import useComments from '../../../hooks/useComments';
 
 import useAuthStore from '../../../store/authStore';
@@ -10,7 +12,7 @@ const Comments = ({ id }) => {
   const isLogin = useAuthStore((state) => state.isLogin);
 
   if (isPending) {
-    return <div>로딩 중..</div>;
+    return <Loading />;
   }
 
   if (isError) {

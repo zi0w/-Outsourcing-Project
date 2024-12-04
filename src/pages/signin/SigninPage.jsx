@@ -52,7 +52,6 @@ const SigninPage = () => {
           redirectTo: '/'
         }
       });
-      
     } catch (error) {
       Swal.fire({
         icon: 'error',
