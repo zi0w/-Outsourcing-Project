@@ -26,7 +26,13 @@ const Search = () => {
             <input type="text" value={searchText} onChange={handleSearch} className="w-10/12 outline-none" />
             <button className="bg-search-icon w-[24px] h-[24px]"></button>
           </div>
-          <ul className="mt-[20px] flex flex-col gap-[20px] overflow-auto">
+          <ul
+            className="mt-[20px] flex flex-col gap-[20px] overflow-auto [&::-webkit-scrollbar]:w-2
+[&::-webkit-scrollbar-track]:bg-gray-100
+[&::-webkit-scrollbar-thumb]:bg-gray-300
+dark:[&::-webkit-scrollbar-track]:bg-neutral-700
+dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
+          >
             {filterdRestaurants().map((restaurant) => {
               return (
                 <SearchList key={restaurant.id} restaurant={restaurant} setSelectedRestaurant={setSelectedRestaurant} />

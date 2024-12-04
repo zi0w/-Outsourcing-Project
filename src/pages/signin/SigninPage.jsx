@@ -6,6 +6,7 @@ import useAuthStore from '../../store/authStore';
 import AuthForm from '../../components/features/AuthForm';
 
 import googleIcon from '../../assets/images/icons/google.png';
+import supabase from '../../supabase/supabase';
 
 const SigninPage = () => {
   const navigate = useNavigate();
@@ -41,14 +42,17 @@ const SigninPage = () => {
 
   const googleLogin = async () => {
     try {
-      await useAuthStore.getState().googleLogin();
-
-      Swal.fire({
-        icon: 'success',
-        title: '구글 로그인 성공!'
+      const { data: googleUser, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent'
+          },
+          redirectTo: '/'
+        }
       });
-
-      navigate('/');
+      
     } catch (error) {
       Swal.fire({
         icon: 'error',
@@ -66,12 +70,12 @@ const SigninPage = () => {
         <button
           type="link"
           onClick={googleLogin}
-          className="flex items-center mt-5 w-full border border-[#4285F4] rounded-sm bg-[#4285F4]"
+          className="flex items-center justify-center mt-5 w-full rounded-[10px] shadow-[0_4px_4px_rgba(0,0,0,0.25)] border border-[#f3f3f3]"
         >
           <p className="p-2 bg-white">
             <img src={googleIcon} alt="google icon" />
           </p>
-          <span className="mx-auto text-white font-bold">Google 계정으로 가입</span>
+          <span className="font-bold">구글 로그인</span>
         </button>
         <div className="flex items-center justify-center gap-2 mt-2  text-sm">
           <p className="text-[#aaa]">계정이 없으신가요?</p>
