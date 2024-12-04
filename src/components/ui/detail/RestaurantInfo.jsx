@@ -38,7 +38,7 @@ const RestaurantInfo = ({ id }) => {
         <p className="text-[12px]">{restaurants.chef_name} 셰프</p>
         <p className="text-[12px]">주소 : {restaurants.address}</p>
         <p className="text-[12px]">브레이크 타임: {restaurants.break_time ? restaurants.break_time : '없음'}</p>
-        {restaurants.day_off.length > 0 ? (
+        {restaurants.day_off?.length > 0 ? (
           <p className="text-[12px]">
             휴무 :
             {restaurants.day_off.map((day, index) => (
