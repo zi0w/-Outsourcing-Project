@@ -1,7 +1,7 @@
 import React from 'react';
 import WhiteChefCardList from './WhiteChefCards';
 
-const WhiteChefsSection = () => {
+const WhiteChefSection = () => {
   return (
     <section className="w-full text-[#fff] pt-[100px] pb-[150px]">
       <div className="">
@@ -15,4 +15,4 @@ const WhiteChefsSection = () => {
   );
 };
 
-export default WhiteChefsSection;
+export default WhiteChefSection;

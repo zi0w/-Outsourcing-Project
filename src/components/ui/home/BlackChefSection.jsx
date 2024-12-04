@@ -1,7 +1,7 @@
 import React from 'react';
 import BlackChefCardList from './BlackChefCardList';
 
-const BlackChefsSection = () => {
+const BlackChefSection = () => {
   return (
     <section className="bg-gradient-45-white w-full pt-[100px] pb-[120px] ">
       <div className="">
@@ -15,4 +15,4 @@ const BlackChefsSection = () => {
   );
 };
 
-export default BlackChefsSection;
+export default BlackChefSection;
