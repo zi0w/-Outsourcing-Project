@@ -1,9 +1,10 @@
+import Loading from '../common/Loading';
+
 import useAuthStore from '../../../store/authStore';
 
 import useCommentBox from '../../../hooks/useCommentBox';
 
 const CommentBox = ({ comment }) => {
-  // 현재 로그인한 유저
   const user = useAuthStore((state) => state.user);
 
   const {
@@ -28,7 +29,7 @@ const CommentBox = ({ comment }) => {
   };
 
   if (isPending) {
-    return <div>로딩 중..</div>;
+    return <Loading />;
   }
 
   if (isError) {
@@ -36,12 +37,12 @@ const CommentBox = ({ comment }) => {
   }
 
   return (
-    <div className="w-full min-h-[120px] p-2 rounded-[16px] border-none shadow-md flex flex-row items-center gap-[9.98px] bg-slate-400">
+    <div className="w-full min-h-[120px] p-2 rounded-[16px] border-none shadow-md flex flex-row items-center gap-[9.98px] ">
       <img src={userData.profile_image_url} alt="User Profile" className="w-[60px] h-[60px] rounded-full" />
       <div className="w-full">
         <div className="flex items-center justify-between">
           <h5 className="text-base font-[600]">{userData.nickname}</h5>
-          <p className="text-[12px] text-slate-300">
+          <p className="text-[12px] text-slate-900">
             {new Date(comment.created_at).toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: '2-digit',

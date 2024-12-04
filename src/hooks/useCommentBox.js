@@ -70,6 +70,10 @@ const useCommentBox = (comment, user) => {
 
       const previousComments = queryClient.getQueryData(['comments', comment.restaurant_id]);
 
+      queryClient.setQueryData(['comments', comment.restaurant_id], (old) =>
+        old.filter((item) => item.id !== comment.id)
+      );
+
       return { previousComments };
     },
     onError: (err, _, context) => {
@@ -96,6 +100,10 @@ const useCommentBox = (comment, user) => {
       await queryClient.cancelQueries({ queryKey: ['comments', comment.restaurant_id] });
 
       const previousComments = queryClient.getQueryData(['comments', comment.restaurant_id]);
+
+      queryClient.setQueryData(['comments', comment.restaurant_id], (old) =>
+        old.filter((item) => (item.id === comment.id ? { ...item, comment: newComment } : item))
+      );
 
       return { previousComments };
     },

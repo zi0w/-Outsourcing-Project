@@ -3,7 +3,7 @@ const { kakao } = window;
 const changeAddress = (address, name, description, phoneNumber, ref) => {
   const mapOption = {
     center: new window.kakao.maps.LatLng(37.566696, 126.977942), // 지도의 중심좌표
-    level: 3 // 지도의 확대 레벨
+    level: 4 // 지도의 확대 레벨
   };
 
   const map = new window.kakao.maps.Map(ref.current, mapOption);

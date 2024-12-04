@@ -53,7 +53,7 @@ const useLike = (id, user) => {
     queryFn: getLikesData
   });
 
-  const liked = likes?.some((like) => like.user_id === user.id);
+  const liked = likes?.some((like) => like.user_id === user?.id) || false;
 
   const handleInsertlike = async (userId, restaurantId) => {
     if (liked) {

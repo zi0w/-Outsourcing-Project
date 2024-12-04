@@ -1,3 +1,5 @@
+import { useNavigate } from 'react-router-dom';
+
 import Swal from 'sweetalert2';
 
 import useAuthStore from '../../store/authStore';
@@ -5,6 +7,8 @@ import useAuthStore from '../../store/authStore';
 import useCommentForm from '../../hooks/useCommentForm';
 
 const CommentForm = ({ id }) => {
+  const navigate = useNavigate();
+
   const isLogin = useAuthStore((state) => state.isLogin);
 
   const user = useAuthStore((state) => state.user);
@@ -31,7 +35,14 @@ const CommentForm = ({ id }) => {
       Swal.fire({
         icon: 'info',
         title: '로그인 해주세요.',
-        text: '로그인 이후에 리뷰를 남길 수 있습니다.'
+        text: '로그인 이후에 리뷰를 남길 수 있습니다.',
+        showDenyButton: true,
+        confirmButtonText: '로그인 하기',
+        denyButtonText: `그냥 볼게요.`
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/signin');
+        }
       });
     }
   };

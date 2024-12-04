@@ -1,5 +1,7 @@
 import { useEffect, useRef } from 'react';
 
+import Loading from '../ui/common/Loading';
+
 import useDetailMap from '../../hooks/useDetailMap';
 
 import changeAddress from '../../utils/changeAddress';
@@ -15,17 +17,15 @@ const DetailMap = ({ id }) => {
     }
   }, [mapData]);
 
-  console.log(mapRef);
-
   if (isPending) {
-    return <div>로딩 중..</div>;
+    return <Loading />;
   }
 
   if (isError) {
     return <div>에러 발생...</div>;
   }
 
-  return <div ref={mapRef} className="w-full h-full rounded-[24px]" />;
+  return <div ref={mapRef} className="w-full h-full rounded-[24px] shadow-[0px_6px_8px_rgba(0,0,0,0.3)]" />;
 };
 
 export default DetailMap;

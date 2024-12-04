@@ -1,10 +1,16 @@
+import { useNavigate } from 'react-router-dom';
+
 import Swal from 'sweetalert2';
+
+import Loading from '../common/Loading';
 
 import useAuthStore from '../../../store/authStore';
 
 import useLike from '../../../hooks/useLike';
 
 const RestaurantInfo = ({ id }) => {
+  const navigate = useNavigate();
+
   const user = useAuthStore((state) => state.user);
 
   const { restaurants, isPending, isError, liked, handleUpdateLike } = useLike(id, user);
@@ -15,7 +21,14 @@ const RestaurantInfo = ({ id }) => {
       Swal.fire({
         icon: 'info',
         title: '로그인 후 좋아요를 눌러주세요.',
-        text: '로그인/회원가입을 통해 즐겨보세요.'
+        text: '로그인/회원가입을 통해 즐겨보세요.',
+        showDenyButton: true,
+        confirmButtonText: '로그인 하기',
+        denyButtonText: `그냥 볼게요.`
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate('/signin');
+        }
       });
     } else {
       handleUpdateLike();
@@ -23,7 +36,7 @@ const RestaurantInfo = ({ id }) => {
   };
 
   if (isPending) {
-    return <div>로딩 중..</div>;
+    return <Loading />;
   }
 
   if (isError) {
@@ -36,9 +49,11 @@ const RestaurantInfo = ({ id }) => {
       <div className="w-[50%] flex flex-col items-start justify-center pl-6">
         <h3 className="text-lg font-[600]">{restaurants.name}</h3>
         <p className="text-[12px]">{restaurants.chef_name} 셰프</p>
-        <p className="text-[12px]">주소 : {restaurants.address}</p>
-        <p className="text-[12px]">브레이크 타임: {restaurants.break_time ? restaurants.break_time : '없음'}</p>
-        {restaurants.day_off.length > 0 ? (
+        <p className="text-[12px] break-keep">주소 : {restaurants.address}</p>
+        <p className="text-[12px] break-keep">
+          브레이크 타임: {restaurants.break_time ? restaurants.break_time : '없음'}
+        </p>
+        {restaurants.day_off?.length > 0 ? (
           <p className="text-[12px]">
             휴무 :
             {restaurants.day_off.map((day, index) => (
