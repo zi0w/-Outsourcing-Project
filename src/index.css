@@ -10,7 +10,7 @@
   width: 100%;
   max-width: 200px;
   box-sizing: border-box;
-  padding: 10px;  
+  padding: 10px;
   border: none;
   background-color: #1a1a1a;
   color: white;
@@ -26,7 +26,7 @@
   width: 100%;
   max-width: 200px;
   box-sizing: border-box;
-  padding: 10px;  
+  padding: 10px;
   border: none;
   background-color: #fff;
   color: #111;
@@ -37,6 +37,5 @@
 }
 .white-select-design:focus,
 .white-select-design:active {
-  outline: none;  
+  outline: none;
 }
-

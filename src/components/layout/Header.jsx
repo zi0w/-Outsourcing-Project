@@ -1,21 +1,15 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
 import useAuthStore from '../../store/authStore';
-
 import HeaderDropdown from './HeaderDropdown';
-
 const Header = () => {
   const location = useLocation();
   const isLogin = useAuthStore((state) => state.isLogin);
   const profileImg = useAuthStore((state) => state.user?.profile_image_url);
-
   const [isToggleState, setIsToggleState] = useState(false);
-
   useEffect(() => {
     setIsToggleState(false);
   }, [location.pathname]);
-
   return (
     <header className="w-full bg-black">
       <div className="w-full max-w-[1440px] mx-auto bg-black text-white flex justify-between items-center">
@@ -23,7 +17,6 @@ const Header = () => {
           <h1 className="block w-[36px] h-[36px] bg-[url('/logo.png')] bg-no-repeat bg-center bg-cover rounded-[50%]"></h1>
           <span className="text-[21px] leading-[64px] ml-[5px] ">이븐한맛집</span>
         </Link>
-
         <nav className="relative flex items-center gap-5">
           <Link to="/search" className="hover:text-red-500">
             전체보기

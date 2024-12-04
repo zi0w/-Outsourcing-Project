@@ -36,9 +36,7 @@ const Footer = () => {
       {/* footer - inner */}
       <div className="mx-auto w-full max-w-[600px] py-5 text-center">
         {/* copyright text */}
-        <p className="mb-[15px] text-[#ccc] text-sm">
-          @ Copyright 2024 pa5rangers. All rights reserved
-        </p>
+        <p className="mb-[15px] text-[#ccc] text-sm">@ Copyright 2024 pa5rangers. All rights reserved</p>
         {/* developer intro */}
         <div className="flex justify-between text-[13px]">
           {teamMembersInfo.map((member) => (
