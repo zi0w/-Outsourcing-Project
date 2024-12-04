@@ -61,7 +61,7 @@
 - 로그인 된 유저가 접근할 수 있는 페이지와 아닌 페이지 구분(`GuestRoute`, `PrivateRoute`)
 - `Layout`과 `Outlet`을 사용하여 일관된 UI 제공
   
-### 5️⃣ Custom Hook을 이용한 비즈니스 로직과 UI 로직 분리
+### 6️⃣ Custom Hook을 이용한 비즈니스 로직과 UI 로직 분리
 
 
 <br/>
