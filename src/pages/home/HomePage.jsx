@@ -2,7 +2,7 @@ import { useLocation } from 'react-router-dom';
 import Home from '../../components/ui/home/Home';
 import { useEffect } from 'react';
 import supabase from '../../supabase/supabase';
-import useAuthStore from "../../store/authStore";
+import useAuthStore from '../../store/authStore';
 
 const HomePage = () => {
   const location = useLocation();

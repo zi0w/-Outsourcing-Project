@@ -13,7 +13,8 @@ const useRestaurants = () => {
     error
   } = useQuery({
     queryKey: ['restaurants'],
-    queryFn: fetchRestaurantData
+    queryFn: fetchRestaurantData,
+    staleTime: Infinity
   });
 
   return { restaurants, isPending, error };

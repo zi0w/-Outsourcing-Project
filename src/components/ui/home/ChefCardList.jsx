@@ -8,10 +8,10 @@ import ChefCardItem from './ChefCardItem';
 import SliderSelector from './SliderSelector';
 import { BlackCustomNextArrow, BlackCustomPrevArrow, WhiteCustomNextArrow, WhiteCustomPrevArrow } from './CustomArrows';
 
-const ChefCardList = ({ restaurantInfo, color }) => {
+const ChefCardList = ({ restaurants, color }) => {
   const sliderRef = useRef(null);
 
-  const filteredInfo = restaurantInfo.filter((item) => item.color === color);
+  const filteredInfo = restaurants.filter((item) => item.color === color);
 
   // slider settings
   const whiteSettings = {
@@ -66,12 +66,12 @@ const ChefCardList = ({ restaurantInfo, color }) => {
     <div className="w-full max-w-6xl mx-auto">
       {/* selector */}
       <div className="mb-10 flex justify-center">
-        <SliderSelector color={color} filteredInfo={filteredInfo} />
+        <SliderSelector color={color} filteredInfo={filteredInfo} sliderRef={sliderRef} />
       </div>
 
       {/* Slider */}
       <div className=" mx-auto max-w-[1440px] ">
-        <Slider ref={sliderRef} {...(color === 'black' ? whiteSettings :  blackSettings)}>
+        <Slider ref={sliderRef} {...(color === 'black' ? whiteSettings : blackSettings)}>
           {/* ChefCard */}
           {filteredInfo.map((info) => (
             <ChefCardItem key={info.id} info={info} color={color} />
