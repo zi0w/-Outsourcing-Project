@@ -9,6 +9,7 @@ const RestaurantInfo = ({ id }) => {
 
   const { restaurants, isPending, isError, liked, handleUpdateLike } = useLike(id, user);
 
+  console.log(restaurants);
   const handleLikeUpdate = () => {
     if (!user) {
       Swal.fire({
@@ -30,9 +31,9 @@ const RestaurantInfo = ({ id }) => {
   }
 
   return (
-    <div className="w-full h-[200px] rounded-[24px] bg-red-200">
-      <div className="ml-[40px] p-2 flex flex-col gap-[5px] relative">
-        <EmptyHeart liked={liked} onClick={handleLikeUpdate} />
+    <div className="w-full h-[200px] rounded-[24px] border relative overflow-hidden flex justify-between gap-[5px]  text-white ">
+      <EmptyHeart liked={liked} onClick={handleLikeUpdate} />
+      <div className="w-[50%] flex flex-col items-start justify-center pl-6">
         <h3 className="text-lg font-[600]">{restaurants.name}</h3>
         <p className="text-[12px]">{restaurants.chef_name} 셰프</p>
         <p className="text-[12px]">주소 : {restaurants.address}</p>
@@ -57,6 +58,14 @@ const RestaurantInfo = ({ id }) => {
           <p className="text-[12px]">평일.주말 : {restaurants.operating_time[0]}</p>
         )}
       </div>
+      <div
+        className={
+          restaurants.color === 'white'
+            ? 'w-[50%] bg-no-repeat bg-[length:500px] bg-top'
+            : 'w-[50%] bg-no-repeat bg-[center_top_-2rem] bg-[length:320px]'
+        }
+        style={{ backgroundImage: `url(${restaurants.image_url})` }}
+      />
     </div>
   );
 };
