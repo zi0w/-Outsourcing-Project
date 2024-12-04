@@ -9,7 +9,7 @@ import Loading from '../common/Loading';
 const Search = () => {
   const [selectedRestaurant, setSelectedRestaurant] = useState(null); // 지도에 선택된 가게 포커싱 하기 위한 상태
   const { restaurants, isPending, error } = useRestaurants();
-  const { handleColorType, colorFilter, searchText, handleSearch, filterdRestaurants } =
+  const { handleColorType, colorFilter, searchText, handleSearch, filteredRestaurants } =
     useRestaurantFilters(restaurants);
 
   if (isPending) return <Loading />;
@@ -34,7 +34,7 @@ const Search = () => {
 dark:[&::-webkit-scrollbar-track]:bg-neutral-700
 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
           >
-            {filterdRestaurants().map((restaurant) => {
+            {filteredRestaurants().map((restaurant) => {
               return (
                 <SearchList key={restaurant.id} restaurant={restaurant} setSelectedRestaurant={setSelectedRestaurant} />
               );
