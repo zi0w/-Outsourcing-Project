@@ -1,8 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
-import supabase from '../../supabase/supabase';
+import useAuthStore from '../../store/authStore';
+
 import AuthForm from '../../components/features/AuthForm';
+
+import googleIcon from '../../assets/images/icons/google.png';
 
 const SigninPage = () => {
   const navigate = useNavigate();
@@ -10,14 +13,7 @@ const SigninPage = () => {
   const handleSignin = async (formState) => {
     const { email, password } = formState;
     try {
-      const { user, error } = await supabase.auth.signInWithPassword({
-        email,
-        password
-      });
-
-      if (error) {
-        throw new Error(error.message);
-      }
+      await useAuthStore.getState().login(email, password);
 
       Swal.fire({
         icon: 'success',
@@ -26,12 +22,38 @@ const SigninPage = () => {
 
       navigate('/');
     } catch (error) {
-      console.error(error);
+      if (error.message.includes('Invalid login credentials')) {
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 오류',
+          text: '이메일 또는 비밀번호가 잘못되었습니다.'
+        });
+      } else {
+        // 그외 에러
+        Swal.fire({
+          icon: 'error',
+          title: '로그인 오류',
+          text: error.message
+        });
+      }
+    }
+  };
+
+  const googleLogin = async () => {
+    try {
+      await useAuthStore.getState().googleLogin();
 
       Swal.fire({
+        icon: 'success',
+        title: '구글 로그인 성공!'
+      });
+
+      navigate('/');
+    } catch (error) {
+      Swal.fire({
         icon: 'error',
-        title: '로그인 오류',
-        text: error
+        title: '소셜 로그인 오류',
+        text: error.message
       });
     }
   };
@@ -41,7 +63,17 @@ const SigninPage = () => {
       <div className="p-[60px] bg-white w-[500px] rounded-3xl text-center">
         <h2 className="mb-5 text-4xl font-bold">로그인</h2>
         <AuthForm mode="signin" onSubmit={handleSignin} />
-        <div className="flex items-center justify-center gap-2 mt-6  text-sm">
+        <button
+          type="link"
+          onClick={googleLogin}
+          className="flex items-center mt-5 w-full border border-[#4285F4] rounded-sm bg-[#4285F4]"
+        >
+          <p className="p-2 bg-white">
+            <img src={googleIcon} alt="google icon" />
+          </p>
+          <span className="mx-auto text-white font-bold">Google 계정으로 가입</span>
+        </button>
+        <div className="flex items-center justify-center gap-2 mt-2  text-sm">
           <p className="text-[#aaa]">계정이 없으신가요?</p>
           <Link to="/signup" className="font-bold text-[#EC4C4C] hover:underline">
             회원가입하러 가기

@@ -1,28 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-
-import supabase from '../../../supabase/supabase';
-
 import CommentBox from './CommentBox';
 
+import useComments from '../../../hooks/useComments';
+
+import useAuthStore from '../../../store/authStore';
+
 const Comments = ({ id }) => {
-  // const id = '0c67a5e8-eef2-4995-a5bf-a14d6910ad0a';
+  const { restaurantComments, isPending, isError } = useComments(id);
 
-  const getCommentDatas = async (restaurantId) => {
-    let { data } = await supabase.from('comments').select('*').eq('restaurant_id', restaurantId);
-
-    return data;
-  };
-
-  const {
-    data: restaurantComments,
-    isPending,
-    isError
-  } = useQuery({
-    queryKey: ['comments', id],
-    queryFn: () => getCommentDatas(id)
-  });
-
-  console.log(restaurantComments);
+  const isLogin = useAuthStore((state) => state.isLogin);
 
   if (isPending) {
     return <div>로딩 중..</div>;
@@ -33,7 +18,13 @@ const Comments = ({ id }) => {
   }
 
   return (
-    <div className="mt-[30px] border-t-2 border-[#AAAAAA] ">
+    <div
+      className={`mt-8 border-t-2 border-[#AAAAAA]  ${
+        !isLogin
+          ? 'after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[50%] after:backdrop-blur-[3px]'
+          : ''
+      }`}
+    >
       <div
         className="p-2 flex flex-col gap-[27px] mt-[8px] max-h-[250px] overflow-y-auto [&::-webkit-scrollbar]:w-2
       [&::-webkit-scrollbar-track]:bg-gray-100
@@ -42,14 +33,7 @@ const Comments = ({ id }) => {
       dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500"
       >
         {restaurantComments?.length > 0 ? (
-          restaurantComments.map((comment) => (
-            <CommentBox
-              key={comment.id}
-              userId={comment.user_id}
-              comment={comment.comment}
-              createdAt={comment.created_at}
-            />
-          ))
+          restaurantComments.map((comment) => <CommentBox key={comment.id} comment={comment} />)
         ) : (
           <p className="text-center text-slate-400">댓글이 없습니다. 댓글을 입력해주세요.</p>
         )}

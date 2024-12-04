@@ -1,73 +1,39 @@
-import { useState } from 'react';
-
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-
 import Swal from 'sweetalert2';
 
-import supabase from '../../supabase/supabase';
+import useAuthStore from '../../store/authStore';
+
+import useCommentForm from '../../hooks/useCommentForm';
 
 const CommentForm = ({ id }) => {
-  const queryClient = useQueryClient();
+  const isLogin = useAuthStore((state) => state.isLogin);
 
-  const [comment, setComment] = useState('');
+  const user = useAuthStore((state) => state.user);
 
-  const handleChange = (e) => {
-    setComment(e.target.value);
-    console.log(comment);
-  };
-
-  const handleSubmit = async (review) => {
-    const { data, error } = await supabase
-      .from('comments')
-      .insert([{ user_id: '073b37db-9e7a-4d24-a2fd-7bfae432ae33', restaurant_id: id, comment: review }])
-      .select();
-
-    console.log(error);
-    console.log('data', data);
-
-    return data;
-  };
-
-  const { mutate: handleCommentSubmit } = useMutation({
-    mutationFn: (comment) => handleSubmit(comment),
-    onMutate: async (newComment) => {
-      await queryClient.cancelQueries({ queryKey: ['comments', id] });
-
-      const previousComments = queryClient.getQueryData(['comments', id]);
-      queryClient.setQueryData(['comments', id], (old) => [
-        ...old,
-        {
-          id: Date.now().toString(),
-          user_id: '073b37db-9e7a-4d24-a2fd-7bfae432ae33',
-          restaurant_id: id,
-          comment: newComment,
-          created_at: new Date()
-        }
-      ]);
-      return { previousComments };
-    },
-    onError: (err, newComment, context) => {
-      queryClient.setQueriesData(['comments', id], context.previousComments);
-      Swal.fire({
-        icon: 'error',
-        title: '댓글 작성에 실패하셨습니다.',
-        text: '댓글을 다시 작성하세요.'
-      });
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['comments', id] });
-      Swal.fire({
-        icon: 'success',
-        title: '댓글을 작성했습니다.',
-        text: '댓글작성을 성공했습니다.'
-      });
-    }
-  });
+  const { comment, setComment, handleChange, handleCommentSubmit } = useCommentForm(id, user);
 
   const handleSubmitForm = (e) => {
     e.preventDefault();
-    handleCommentSubmit(comment);
-    setComment('');
+
+    if (!comment) {
+      Swal.fire({
+        icon: 'info',
+        title: '댓글을 입력해 해주세요.',
+        text: '매장에 리뷰를 입력해 주세요.'
+      });
+
+      return;
+    }
+
+    if (isLogin) {
+      handleCommentSubmit(comment);
+      setComment('');
+    } else {
+      Swal.fire({
+        icon: 'info',
+        title: '로그인 해주세요.',
+        text: '로그인 이후에 리뷰를 남길 수 있습니다.'
+      });
+    }
   };
 
   return (
