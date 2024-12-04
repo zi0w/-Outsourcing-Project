@@ -1,5 +1,4 @@
 const SliderSelector = ({ color, filteredInfo, sliderRef }) => {
-
   // select handle
   const handleSlideChange = (e) => {
     // 선택한 쉐프님을 가운데로 위치시키기 위함

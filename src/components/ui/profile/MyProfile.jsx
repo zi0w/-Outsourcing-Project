@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 
 import useAuthStore from '../../../store/authStore';
+
 import supabase from '../../../supabase/supabase';
 
 import defaultImg from '../../../assets/images/profile/default_img.jpg';
@@ -65,7 +66,7 @@ const MyProfile = ({ newProfileImg, setNewProfileImg }) => {
         className="hidden"
         onChange={(e) => handleImageChange(e.target.files)}
       />
-      <h1 className="text-black mt-[20px] text-white font-medium text-[20px]">{user.nickname}</h1>
+      <h1 className="mt-[20px] text-white font-medium text-[20px]">{user.nickname}</h1>
     </div>
   );
 };

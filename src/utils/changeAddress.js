@@ -14,8 +14,6 @@ const changeAddress = (address, name, description, phoneNumber, ref) => {
     if (status === kakao.maps.services.Status.OK) {
       let cords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-      console.log('cords', cords);
-
       let marker = new kakao.maps.Marker({
         map: map,
         position: cords

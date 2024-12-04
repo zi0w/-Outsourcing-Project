@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+
 import { persist } from 'zustand/middleware';
 
 import supabase from '../supabase/supabase';
@@ -52,7 +53,6 @@ const authStore = persist(
     updateUser: async (id) => {
       const { data, error: userError } = await supabase.from('users').select('*').eq('id', id).single();
 
-
       //상태 업데이트
       set(() => ({
         isLogin: true,
@@ -64,7 +64,6 @@ const authStore = persist(
         }
       }));
     },
-
 
     updateProfile: (nickname, profileImg) => {
       set((state) => ({
@@ -101,4 +100,5 @@ const authStore = persist(
 );
 
 const useAuthStore = create(authStore);
+
 export default useAuthStore;

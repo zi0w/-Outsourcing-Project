@@ -1,4 +1,5 @@
 import { useDeleteComment } from '../../../hooks/profile/useDeleteComment';
+
 import defaultImg from '../../../assets/images/profile/default_img.jpg';
 
 const CommentsList = ({ comments, newProfileImg }) => {

@@ -1,6 +1,9 @@
 import { useQueryClient } from '@tanstack/react-query';
-import useAuthStore from '../../store/authStore';
+
 import Swal from 'sweetalert2';
+
+import useAuthStore from '../../store/authStore';
+
 import supabase from '../../supabase/supabase';
 
 export const useUpdateProfile = (newNickname, newProfileImg, user) => {

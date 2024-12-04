@@ -1,12 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2';
 
-import useAuthStore from '../../store/authStore';
+import Swal from 'sweetalert2';
 
 import AuthForm from '../../components/features/AuthForm';
 
-import googleIcon from '../../assets/images/icons/google.png';
+import useAuthStore from '../../store/authStore';
+
 import supabase from '../../supabase/supabase';
+
+import googleIcon from '../../assets/images/icons/google.png';
 
 const SigninPage = () => {
   const navigate = useNavigate();

@@ -1,14 +1,17 @@
 import { useState } from 'react';
-import useRestaurants from '../../../hooks/useRestaurants';
+
 import ChefCardList from './ChefCardList';
+
 import Loading from '../common/Loading';
+
+import useRestaurants from '../../../hooks/useRestaurants';
 
 const WhiteChefCardList = () => {
   const { restaurants, isError, isPending } = useRestaurants();
   const [color, setColor] = useState('white');
 
   if (isPending) {
-    return <Loading/>;
+    return <Loading />;
   }
 
   if (isError) {
