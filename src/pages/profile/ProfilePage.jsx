@@ -38,6 +38,16 @@ const ProfilePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // 닉네임 입력이 비어있는 경우 예외 처리
+    if (!newNickname.trim()) {
+      Swal.fire({
+        icon: 'error',
+        title: '닉네임을 입력해주세요.',
+        confirmButtonColor: '#d33'
+      });
+      return;
+    }
+
     // sweetalert
     const result = await Swal.fire({
       icon: 'warning',
@@ -250,7 +260,7 @@ const ProfilePage = () => {
 
   return (
     // 유저 프로필 정보
-    <section className="h-[calc(100vh-230px)] bg-gray-500 text-white flex-col items-center pt-14">
+    <section className="h-[calc(100vh-163px)] text-white flex-col items-center pt-36">
       <div className="text-center">
         <label htmlFor="imgFile" className="relative group cursor-pointer block w-[138px] h-[138px] mx-auto">
           <img
