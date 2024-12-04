@@ -33,7 +33,7 @@ const CommentBox = ({ comment }) => {
   }
 
   if (isError) {
-    return <div>에러발 생...</div>;
+    return <div>에러발생...</div>;
   }
 
   return (

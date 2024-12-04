@@ -37,7 +37,7 @@ const Comments = ({ id }) => {
         {restaurantComments?.length > 0 ? (
           restaurantComments.map((comment) => <CommentBox key={comment.id} comment={comment} />)
         ) : (
-          <p className="text-center text-slate-400">댓글이 없습니다. 댓글을 입력해주세요.</p>
+          <p className="text-center text-slate-400">리뷰가 없습니다. 리뷰를 입력해주세요.</p>
         )}
       </div>
     </div>
