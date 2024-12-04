@@ -7,6 +7,7 @@ const authStore = persist(
   (set) => ({
     isLogin: false,
     user: null,
+    accessToken: null,
 
     //로그인
     login: async (email, password) => {
@@ -47,46 +48,17 @@ const authStore = persist(
       }
     },
 
-    // 소셜 로그인 (구글)
-    googleLogin: async () => {
-      try {
-        //supabase 구글로그인 요청
-        const { data: googleUser, error } = await supabase.auth.signInWithOAuth({
-          provider: 'google',
-          options: {
-            queryParams: {
-              access_type: 'offline',
-              prompt: 'consent'
-            }
-          }
-        });
-        const { user } = googleUser;
+    // 토큰 저장, 소셜 로그인 (구글)
+    setAccessToken: (token) => set({ accessToken: token }),
 
-        if (error) throw new Error(error.message);
-        
-        // users 테이블에서 사용자 정보 가져오기
-        const { data, error: userError } = await supabase
-          .from('users')
-          .select('id, nickname, profile_image_url')
-          .eq('email', user.email)
-          .single();
-        if (userError) throw new Error(userError.message);
-
-        // 상태 업데이트
-        set({
-          isLogin: true,
-          user: {
-            id: data?.id,
-            email: user?.email,
-            nickname: data?.nickname,
-            profile_image_url: data?.profile_image_url
-          }
-        });
-        console.log('Google login successful, state updated');
-      } catch (error) {
-        console.error('Google login error:', error.message);
-        throw new Error(error.message);
-      }
+    updateProfile: (nickname, profileImg) => {
+      set((state) => ({
+        user: {
+          ...state.user,
+          nickname: nickname || state.user.nickname,
+          profile_image_url: profileImg || state.user.profile_image_url
+        }
+      }));
     },
 
     //로그아웃
