@@ -9,9 +9,7 @@ const SearchList = ({ restaurant }) => {
         <p className="text-sm text-gray-600 break-words">{restaurant.phone_number}</p>
       </div>
       <div>
-        <span className="border border-black rounded-full p-2 w-[30px] h-[30px] flex items-center justify-center bg-black text-white">
-          >
-        </span>
+        <span className="border border-black rounded-full p-2 w-[30px] h-[30px] flex items-center justify-center bg-black text-white"></span>
       </div>
     </li>
   );

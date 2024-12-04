@@ -1,22 +1,31 @@
-import { useQuery } from '@tanstack/react-query';
+import useAuthStore from '../../../store/authStore';
 
-import supabase from '../../../supabase/supabase';
+import useCommentBox from '../../../hooks/useCommentBox';
 
-const CommentBox = ({ userId, comment, createdAt }) => {
-  const getUserData = async (Id) => {
-    let { data } = await supabase.from('users').select('*').eq('id', Id).single();
-
-    return data;
-  };
+const CommentBox = ({ comment }) => {
+  // 현재 로그인한 유저
+  const user = useAuthStore((state) => state.user);
 
   const {
-    data: userData,
+    modify,
+    setModify,
+    newComment,
+    setNewComment,
+    userData,
     isPending,
-    isError
-  } = useQuery({
-    queryKey: ['user', userId],
-    queryFn: () => getUserData(userId)
-  });
+    isError,
+    handleCommentDelete,
+    handleCommentModify
+  } = useCommentBox(comment, user);
+
+  const handleCommentUpdate = () => {
+    if (modify) {
+      handleCommentModify();
+      setModify(false);
+    } else {
+      setModify(true);
+    }
+  };
 
   if (isPending) {
     return <div>로딩 중..</div>;
@@ -33,7 +42,7 @@ const CommentBox = ({ userId, comment, createdAt }) => {
         <div className="flex items-center justify-between">
           <h5 className="text-base font-[600]">{userData.nickname}</h5>
           <p className="text-[12px] text-slate-300">
-            {new Date(createdAt).toLocaleDateString('ko-KR', {
+            {new Date(comment.created_at).toLocaleDateString('ko-KR', {
               year: 'numeric',
               month: '2-digit',
               day: '2-digit',
@@ -43,16 +52,37 @@ const CommentBox = ({ userId, comment, createdAt }) => {
           </p>
         </div>
         <div className="mt-[6.67px] flex items-center justify-between">
-          <p className="text-sm">{comment}</p>
+          {modify ? (
+            <>
+              <input
+                className="w-full p-2 border-none outline-none rounded-lg"
+                type="text"
+                value={newComment}
+                onChange={(e) => setNewComment(e.target.value)}
+              />
+            </>
+          ) : (
+            <>
+              <p className="text-sm">{comment.comment}</p>
+            </>
+          )}
         </div>
-        <div className="mt-[8px] flex gap-2 items-center justify-end">
-          <button className="w-[50px] h-[30px] border-none outline-none rounded-[5px] text-white text-sm bg-blue-600">
-            수정
-          </button>
-          <button className="w-[50px] h-[30px] border-none outline-none rounded-[5px] text-white text-sm bg-red-600">
-            삭제
-          </button>
-        </div>
+        {userData?.id === user?.id && (
+          <div className="mt-[8px] flex gap-2 items-center justify-end">
+            <button
+              onClick={handleCommentUpdate}
+              className="w-[50px] h-[30px] border-none outline-none rounded-[5px] text-white text-sm bg-blue-600"
+            >
+              수정
+            </button>
+            <button
+              onClick={() => handleCommentDelete(comment.user_id)}
+              className="w-[50px] h-[30px] border-none outline-none rounded-[5px] text-white text-sm bg-red-600"
+            >
+              삭제
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
