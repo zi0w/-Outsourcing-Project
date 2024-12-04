@@ -10,7 +10,6 @@ const SearchList = ({ restaurant }) => {
       </div>
       <div>
         <span className="border border-black rounded-full p-2 w-[30px] h-[30px] flex items-center justify-center bg-black text-white">
-          >
         </span>
       </div>
     </li>
