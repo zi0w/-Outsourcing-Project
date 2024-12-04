@@ -5,7 +5,6 @@ import Swal from 'sweetalert2';
 import supabase from '../supabase/supabase';
 
 const useDetailMap = (id) => {
-  // 해당 식당 주소, 이름, 설명을 가져온다.
   const getRestorantAddress = async (restaurantId) => {
     const { data, error } = await supabase
       .from('restaurants')

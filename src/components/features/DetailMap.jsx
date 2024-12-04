@@ -22,7 +22,7 @@ const DetailMap = ({ id }) => {
   }
 
   if (isError) {
-    return <div>에러 발생...</div>;
+    return <div>에러발생...</div>;
   }
 
   return <div ref={mapRef} className="w-full h-full rounded-[24px] shadow-[0px_6px_8px_rgba(0,0,0,0.3)]" />;

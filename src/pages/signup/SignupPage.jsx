@@ -1,8 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
+
 import Swal from 'sweetalert2';
 
-import supabase from '../../supabase/supabase';
 import AuthForm from '../../components/features/AuthForm';
+
+import supabase from '../../supabase/supabase';
 
 import defaultProfileImgUrl from '../../assets/images/profile/default_img.jpg';
 

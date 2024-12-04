@@ -17,7 +17,7 @@ const Detail = () => {
 
   return (
     <section>
-      <div className="m-auto max-w-[1440px] w-full h-screen">
+      <div className="m-auto max-w-[1440px] w-full h-[calc(100vh-65px)]">
         <div className="w-full h-full p-[40px] flex flex-row gap-[40px]">
           {/* 식당 정보 */}
           <div className="max-w-[520px] w-full flex flex-col gap-[40px]">

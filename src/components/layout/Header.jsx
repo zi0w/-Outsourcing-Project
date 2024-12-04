@@ -1,15 +1,24 @@
 import { useEffect, useState } from 'react';
+
 import { Link, useLocation } from 'react-router-dom';
-import useAuthStore from '../../store/authStore';
+
 import HeaderDropdown from './HeaderDropdown';
+
+import useAuthStore from '../../store/authStore';
+
 const Header = () => {
   const location = useLocation();
+
   const isLogin = useAuthStore((state) => state.isLogin);
+
   const profileImg = useAuthStore((state) => state.user?.profile_image_url);
+
   const [isToggleState, setIsToggleState] = useState(false);
+
   useEffect(() => {
     setIsToggleState(false);
   }, [location.pathname]);
+
   return (
     <header className="w-full bg-black">
       <div className="w-full max-w-[1440px] mx-auto bg-black text-white flex justify-between items-center">

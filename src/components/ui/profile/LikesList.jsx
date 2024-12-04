@@ -1,4 +1,5 @@
 import { useDeleteLike } from '../../../hooks/profile/useDeleteLike';
+
 import defaultImg from '../../../assets/images/profile/default_img.jpg';
 
 const LikesList = ({ likes, newProfileImg }) => {

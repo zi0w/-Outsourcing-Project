@@ -1,6 +1,8 @@
-import validateForm from '../../utils/validateForm';
-import useForm from '../../hooks/useForm';
 import SignupFormField from '../ui/signup/SignupFormField';
+
+import validateForm from '../../utils/validateForm';
+
+import useForm from '../../hooks/useForm';
 
 const AuthForm = ({ mode, onSubmit }) => {
   const { formState, formErrors, resetForm, onChangeHandler } = useForm(

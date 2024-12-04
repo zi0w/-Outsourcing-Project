@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import supabase from '../../supabase/supabase';
-import useAuthStore from '../../store/authStore';
+
 import Swal from 'sweetalert2';
+
+import supabase from '../../supabase/supabase';
+
+import useAuthStore from '../../store/authStore';
 
 export const useDeleteComment = () => {
   const user = useAuthStore((state) => state.user); //zustand의 로그인 user 정보
