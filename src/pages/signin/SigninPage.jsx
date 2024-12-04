@@ -5,13 +5,14 @@ import useAuthStore from '../../store/authStore';
 
 import AuthForm from '../../components/features/AuthForm';
 
+import googleIcon from '../../assets/images/icons/google.png';
+
 const SigninPage = () => {
   const navigate = useNavigate();
 
   const handleSignin = async (formState) => {
     const { email, password } = formState;
     try {
-      //zustand 로그인 함수
       await useAuthStore.getState().login(email, password);
 
       Swal.fire({
@@ -38,12 +39,41 @@ const SigninPage = () => {
     }
   };
 
+  const googleLogin = async () => {
+    try {
+      await useAuthStore.getState().googleLogin();
+
+      Swal.fire({
+        icon: 'success',
+        title: '구글 로그인 성공!'
+      });
+
+      navigate('/');
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: '소셜 로그인 오류',
+        text: error.message
+      });
+    }
+  };
+
   return (
     <div className="flex items-center justify-center h-screen bg-gradient-to-br from-[#0E0E0E] to-[#333333]">
       <div className="p-[60px] bg-white w-[500px] rounded-3xl text-center">
         <h2 className="mb-5 text-4xl font-bold">로그인</h2>
         <AuthForm mode="signin" onSubmit={handleSignin} />
-        <div className="flex items-center justify-center gap-2 mt-6  text-sm">
+        <button
+          type="link"
+          onClick={googleLogin}
+          className="flex items-center mt-5 w-full border border-[#4285F4] rounded-sm bg-[#4285F4]"
+        >
+          <p className="p-2 bg-white">
+            <img src={googleIcon} alt="google icon" />
+          </p>
+          <span className="mx-auto text-white font-bold">Google 계정으로 가입</span>
+        </button>
+        <div className="flex items-center justify-center gap-2 mt-2  text-sm">
           <p className="text-[#aaa]">계정이 없으신가요?</p>
           <Link to="/signup" className="font-bold text-[#EC4C4C] hover:underline">
             회원가입하러 가기

@@ -263,14 +263,11 @@ const ProfilePage = () => {
                           )}
                           <button type="button" onClick={() => handleLikeDelete.mutate(like.id)}>
                             <svg
-                              enable-background="new 0 0 48 48"
                               height="20px"
                               version="1.1"
                               viewBox="0 0 48 48"
                               width="18px"
-                              xml:space="preserve"
                               xmlns="http://www.w3.org/2000/svg"
-                              xmlns:xlink="http://www.w3.org/1999/xlink"
                             >
                               <g id="Expanded">
                                 <g>
@@ -337,14 +334,11 @@ const ProfilePage = () => {
                           <p className="">{formatCustomDateTime(comment.created_at)}</p>
                           <button type="button" onClick={() => handleCommentDelete.mutate(comment.id)}>
                             <svg
-                              enable-background="new 0 0 48 48"
                               height="20px"
                               version="1.1"
                               viewBox="0 0 48 48"
                               width="18px"
-                              xml:space="preserve"
                               xmlns="http://www.w3.org/2000/svg"
-                              xmlns:xlink="http://www.w3.org/1999/xlink"
                             >
                               <g id="Expanded">
                                 <g>
@@ -389,7 +383,7 @@ const ProfilePage = () => {
                 type="text"
                 value={newNickname}
                 placeholder="변경하실 닉네임을 입력해주세요."
-                className="mt-1 block w-full bg-white border border-gray-700 rounded-xl p-2 border-none pl-4"
+                className="mt-1 block text-black w-full bg-white border border-gray-700 rounded-xl p-2 border-none pl-4"
                 onChange={(e) => setNewNickname(e.target.value)}
               />
             </div>
