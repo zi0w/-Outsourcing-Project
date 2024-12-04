@@ -1,5 +1,3 @@
-import React from 'react';
-
 // Black Custom Prev Arrow
 const BlackCustomPrevArrow = ({ onClick }) => {
   return (
@@ -31,9 +29,7 @@ const WhiteCustomPrevArrow = ({ onClick }) => {
     <button
       onClick={onClick}
       className="w-8 h-8 flex items-center justify-center absolute top-1/2 left-[-20px] transform -translate-y-[100%] p-4 rounded-full shadow-[0px_2px_2px_rgba(0,0,0,0.3)] z-30 text-white bg-black"
-    >
-      ←
-    </button>
+    >←</button>
   );
 };
 

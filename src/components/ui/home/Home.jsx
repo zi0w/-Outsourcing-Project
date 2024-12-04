@@ -1,4 +1,3 @@
-import React from 'react';
 import BlackChefSection from './BlackChefSection';
 import WhiteChefSection from './WhiteChefSection';
 import HeroSection from './HeroSection';
