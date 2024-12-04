@@ -1,4 +1,4 @@
-import { useMutation, useMutationState, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import supabase from '../../supabase/supabase';
 import defaultImg from '../../assets/images/profile/default_img.jpg';
@@ -63,6 +63,11 @@ const ProfilePage = () => {
   const handleCommentDelete = useMutation({
     mutationFn: (commentId) => deleteComment(commentId),
     onSuccess: () => {
+      Swal.fire({
+        icon: 'success',
+        title: '리뷰 삭제 완료!',
+        confirmButtonColor: '#429f50'
+      });
       queryClient.invalidateQueries(['comments', user.id]);
     }
   });
@@ -76,6 +81,11 @@ const ProfilePage = () => {
   const handleLikeDelete = useMutation({
     mutationFn: (likeId) => deleteLike(likeId),
     onSuccess: () => {
+      Swal.fire({
+        icon: 'success',
+        title: '즐겨찾기 삭제 완료!',
+        confirmButtonColor: '#429f50'
+      });
       queryClient.invalidateQueries([`likes`, user.id]);
     }
   });
@@ -393,7 +403,7 @@ const ProfilePage = () => {
             </div>
             <button
               type="submit"
-              className=" w-[180px] bg-[#EC4C4C] text-xl py-3 rounded-3xl hover:bg-red-500 font-semibold"
+              className="w-[150px] bg-[#EC4C4C] text-xl py-3 rounded-3xl hover:bg-[#B73838] font-semibold"
             >
               변경 하기
             </button>
