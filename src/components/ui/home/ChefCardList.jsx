@@ -8,10 +8,10 @@ import ChefCardItem from './ChefCardItem';
 import SliderSelector from './SliderSelector';
 import { BlackCustomNextArrow, BlackCustomPrevArrow, WhiteCustomNextArrow, WhiteCustomPrevArrow } from './CustomArrows';
 
-const ChefCardList = ({ restaurantInfo, color }) => {
+const ChefCardList = ({ restaurants, color }) => {
   const sliderRef = useRef(null);
 
-  const filteredInfo = restaurantInfo.filter((item) => item.color === color);
+  const filteredInfo = restaurants.filter((item) => item.color === color);
 
   // slider settings
   const whiteSettings = {

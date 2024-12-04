@@ -2,7 +2,7 @@ import BlackChefCardList from './BlackChefCardList';
 
 const BlackChefSection = () => {
   return (
-    <section className="bg-gradient-45-white w-full pt-[100px] pb-[120px] ">
+    <section className="bg-gradient-45-white w-full max-w-[1440px] mx-auto pt-[100px] pb-[120px] shadow-2xl">
       <div className="">
         <h2 className="text-center text-[26px] font-bold mb-[40px]">흑수저 셰프님 식당 목록 </h2>
         <BlackChefCardList />

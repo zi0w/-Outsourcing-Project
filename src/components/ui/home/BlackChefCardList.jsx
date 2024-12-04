@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import useDetailRestaurant from './useDetailRestaurant';
+import useRestaurants from '../../../hooks/useRestaurants';
 import ChefCardList from './ChefCardList';
+import Loading from '../common/Loading';
 
 const BlackChefCardList = () => {
-  const { restaurantInfo, isError, isLoading } = useDetailRestaurant();
+  const { restaurants, isError, isPending } = useRestaurants();
   const [color, setColor] = useState('black');
 
-  if (isLoading) {
-    return <p>Loading...</p>;
+  if (isPending) {
+    return <Loading/>
   }
 
   if (isError) {
     return <p>오류가 발생했습니다.</p>;
   }
 
-  return <ChefCardList restaurantInfo={restaurantInfo} color={color} />;
+  return <ChefCardList restaurants={restaurants} color={color} />;
 };
 
 export default BlackChefCardList;
