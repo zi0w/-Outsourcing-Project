@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import useDetailRestaurant from './useDetailRestaurant';
-import ChefTiles from './ChefTiles';
+import ChefCardList from './ChefCardList';
 
-const WhiteChefTiles = () => {
+const WhiteChefCardList = () => {
   const { restaurantInfo, isError, isLoading } = useDetailRestaurant();
   const [color, setColor] = useState('white');
 
@@ -14,7 +14,7 @@ const WhiteChefTiles = () => {
     return <p>오류가 발생했습니다.</p>;
   }
 
-  return <ChefTiles restaurantInfo={restaurantInfo} color={color} />;
+  return <ChefCardList restaurantInfo={restaurantInfo} color={color} />;
 };
 
-export default WhiteChefTiles;
+export default WhiteChefCardList;

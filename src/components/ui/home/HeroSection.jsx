@@ -2,7 +2,7 @@ import React from 'react';
 
 const HeroSection = () => {
   return (
-    <section className="bg-hero-image h-[700px] w-full bg-no-repeat bg-[center_top_-10rem] bg-cover indent-[-9999em]">
+    <section className="bg-hero-image h-[1000px] w-full max-w-[1440px] mx-auto bg-no-repeat  bg-cover indent-[-9999em]">
       Hero_section
     </section>
   );

@@ -1,16 +1,14 @@
 import React from 'react';
-import BlackChefsSection from './BlackChefsSection';
-import WhiteChefsSection from './WhiteChefsSection';
+import BlackChefSection from './BlackChefSection';
+import WhiteChefSection from './WhiteChefSection';
 import HeroSection from './HeroSection';
 
-
 const Home = () => {
-
   return (
     <>
-      <HeroSection/>
-      <BlackChefsSection/>
-      <WhiteChefsSection/>
+      <HeroSection />
+      <BlackChefSection />
+      <WhiteChefSection />
     </>
   );
 };
