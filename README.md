@@ -67,7 +67,7 @@
 <br/>
 
 # ⚙️ Development Environment ⚙️
-`supabase/supabase-js: ^2.46.1` `react-router-dom: ^6.28.0` `@tanstack/react-query: ^5.61.5` `@tanstack/react-query-devtools: ^5.62.0` `zustand: ^5.0.1` `react-slick: ^0.30.2` `slick-carousel: ^1.8.1` `sweetalert2: ^11.14.5` `tailwindcss: ^3.4.15` `vite: ^6.0.1`
+`supabase/supabase-js: ^2.46.1` `react-router-dom: ^6.28.0` `@tanstack/react-query: ^5.61.5` `@tanstack/react-query-devtools: ^5.62.0` `zustand: ^5.0.1` `react-slick: ^0.30.2` `slick-carousel: ^1.8.1` `sweetalert2: ^11.14.5` `tailwindcss: ^3.4.15` `vite: ^6.0.1` `prettier: 3.4.1` `eslint/js: ^9.15.0`
 
 <br />
 
