@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
+import useDetailRestaurant from './useDetailRestaurant';
 import ChefTiles from './ChefTiles';
 
 const WhiteChefTiles = () => {
-  return (
-    <>
-      <ChefTiles bucketName="white_chefs_images" title="백수저 셰프님 식당 목록" />;
-    </>
-  );
+  const { restaurantInfo, isError, isLoading } = useDetailRestaurant();
+  const [color, setColor] = useState('white');
+
+  if (isLoading) {
+    return <p>Loading...</p>;
+  }
+
+  if (isError) {
+    return <p>오류가 발생했습니다.</p>;
+  }
+
+  return <ChefTiles restaurantInfo={restaurantInfo} color={color} />;
 };
 
 export default WhiteChefTiles;
