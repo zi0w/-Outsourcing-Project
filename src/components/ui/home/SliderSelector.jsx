@@ -1,7 +1,5 @@
-import React, { useRef } from 'react';
+const SliderSelector = ({ color, filteredInfo, sliderRef }) => {
 
-
-const SliderSelector = ({ color, filteredInfo }) => {
   // select handle
   const handleSlideChange = (e) => {
     // 선택한 쉐프님을 가운데로 위치시키기 위함
@@ -28,4 +26,4 @@ const SliderSelector = ({ color, filteredInfo }) => {
   );
 };
 
-export default SliderSelector
+export default SliderSelector;
