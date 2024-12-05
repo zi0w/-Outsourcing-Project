@@ -23,7 +23,7 @@ const Detail = () => {
           <div className="max-w-[520px] w-full flex flex-col gap-[40px]">
             <RestaurantInfo id={id} />
 
-            <div className="w-full h-[760px] rounded-[24px] px-[40px] pt-[38.12px] pb-[35.77px] bg-white overflow-hidden relative">
+            <div className="w-full rounded-[24px] px-[40px] pt-[38.12px] pb-[35.77px] bg-white overflow-hidden relative">
               <CommentForm id={id} />
               <Comments id={id} />
             </div>
