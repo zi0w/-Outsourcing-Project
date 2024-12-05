@@ -8,7 +8,6 @@ const authStore = persist(
   (set) => ({
     isLogin: false,
     user: null,
-    accessToken: null,
 
     //로그인
     login: async (email, password) => {

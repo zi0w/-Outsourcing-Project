@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const ChefCardItem = ({ info, color }) => {
   return (
-    <div key={info.id} className="relative group w-full max-w-[320px] h-[320px] ml-8">
+    <div key={info.id} className="relative group w-full max-w-[320px] ml-8">
       <div>
         <div className="overflow-hidden rounded-[16px] w-[320px] h-[320px] shadow-[0_8px_8px_rgba(0,0,0,0.5)]">
           <img src={info.image_url} alt={`${info.name}`} className="w-full h-full object-cover scale-110 " />
