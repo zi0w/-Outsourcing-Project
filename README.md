@@ -63,8 +63,59 @@
   
 ### 6️⃣ Custom Hook을 이용한 비즈니스 로직과 UI 로직 분리
 
+<br />
 
-<br/>
+# 🎥 시연 영상
+<details>
+<summary>1. 게스트입장 예외처리, 회원가입, 로그인</summary>
+<div markdown="1">
+  
+![게스트입장 예외처리, 회원가입,로그인](https://github.com/user-attachments/assets/910b26c1-8923-4d0c-9b18-5717804a60cd)
+
+
+</div>
+</details>
+<details>
+<summary>2. 디테일페이지 마크업, 좋아요, 댓글</summary>
+<div markdown="1">
+  
+![디테일페이지 마크업, 좋아요, 댓글 crud](https://github.com/user-attachments/assets/84ced97f-1232-4258-b859-31f0627a0905)
+
+
+</div>
+</details>
+<details>
+<summary>3. 홈화면 식당 목록 슬라이드, 셀렉터</summary>
+<div markdown="1">
+
+![홈화면 식당 목록 슬라이드, 셀렉터](https://github.com/user-attachments/assets/40a3d703-e227-42cc-a00b-9eb69000bdcb)
+
+
+</div>
+</details>
+<details>
+<summary>4. 전체 지도 카테고리 분류, 마크업</summary>
+<div markdown="1">
+
+![전체지도 카테고리 분류, 마크업](https://github.com/user-attachments/assets/6367f653-6c49-4d06-9bbe-f8a50728610c)
+
+
+</div>
+</details>
+<details>
+<summary>5. 마이페이지 좋아요, 리뷰 불러오기, 삭제 프로필 이미지, 닉네임 변경</summary>
+<div markdown="1">
+
+![마이페이지 좋아요, 리뷰 불러오기,삭제 프로필 이미지,닉네임변경](https://github.com/user-attachments/assets/33ece2f2-beaa-41a2-b6dc-7253c06ed0ed)
+
+
+
+</div>
+</details>
+
+<br />
+
+<br />
 
 # ⚙️ Development Environment ⚙️
 `supabase/supabase-js: ^2.46.1` `react-router-dom: ^6.28.0` `@tanstack/react-query: ^5.61.5` `@tanstack/react-query-devtools: ^5.62.0` `zustand: ^5.0.1` `react-slick: ^0.30.2` `slick-carousel: ^1.8.1` `sweetalert2: ^11.14.5` `tailwindcss: ^3.4.15` `vite: ^6.0.1` `prettier: 3.4.1` `eslint/js: ^9.15.0`
