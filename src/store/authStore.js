@@ -51,7 +51,7 @@ const authStore = persist(
 
     // 토큰 저장, 소셜 로그인 (구글)
     updateUser: async (id) => {
-      const { data, error: userError } = await supabase.from('users').select('*').eq('id', id).single();
+      const { data } = await supabase.from('users').select('*').eq('id', id).single();
 
       //상태 업데이트
       set(() => ({
@@ -61,16 +61,6 @@ const authStore = persist(
           email: data?.email,
           nickname: data?.nickname,
           profile_image_url: data?.profile_image_url
-        }
-      }));
-    },
-
-    updateProfile: (nickname, profileImg) => {
-      set((state) => ({
-        user: {
-          ...state.user,
-          nickname: nickname || state.user.nickname,
-          profile_image_url: profileImg || state.user.profile_image_url
         }
       }));
     },
