@@ -1,3 +1,5 @@
+import { useCallback } from 'react';
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import Swal from 'sweetalert2';
@@ -10,10 +12,10 @@ export const useDeleteLike = () => {
   const queryClient = useQueryClient();
   const user = useAuthStore((state) => state.user);
   // supabase likes 테이블 삭제 API 함수
-  const deleteLike = async (likeId) => {
+  const deleteLike = useCallback(async (likeId) => {
     const { error } = await supabase.from('likes').delete().eq('id', likeId);
     if (error) console.error('좋아요 삭제 에러:', error);
-  };
+  }, []);
 
   // tanstack query로 supabase likse 테이블 상태 관리
   const handleLikeDelete = useMutation({

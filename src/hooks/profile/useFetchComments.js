@@ -1,10 +1,12 @@
+import { useCallback } from 'react';
+
 import { useQuery } from '@tanstack/react-query';
 
 import supabase from '../../supabase/supabase';
 
 export const useFetchComments = (userId) => {
   // supabase comments 테이블 정보 가져오기 API 함수
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     const { data: comments, error } = await supabase.from('comments').select('*').eq('user_id', userId);
     if (error) {
       console.error('리뷰 가져오기 에러:', error);
@@ -29,7 +31,7 @@ export const useFetchComments = (userId) => {
       })
     );
     return getRestaurantComments;
-  };
+  }, [userId]);
 
   // tanstack query를 사용하여 유저가 작성한 리뷰 데이터 fetch
   const {
