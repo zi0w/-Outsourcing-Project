@@ -18,7 +18,7 @@ const HomePage = () => {
 
     const accessToken = new URLSearchParams(location.hash.slice(1)).get('access_token'); // URLSearchParams : 쿼리 파라미터를 쉽게 관리
     if (!accessToken) {
-      console.error('Access token not found in URL');
+      console.error('토큰오류!');
       return;
     }
 
@@ -26,7 +26,7 @@ const HomePage = () => {
       const { data: user, error } = await supabase.auth.getUser(accessToken);
 
       if (error) {
-        console.error('Error fetching user info:', error);
+        console.error('유저정보 없음!', error);
         return;
       }
       const saveUserToDatabase = async (user) => {
@@ -43,9 +43,6 @@ const HomePage = () => {
           }
         ]);
 
-        if (error) {
-          console.error('Error saving user to database:', error);
-        }
         useAuthStore.getState().updateUser(id);
       };
 

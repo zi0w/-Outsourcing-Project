@@ -51,7 +51,7 @@ const SigninPage = () => {
             access_type: 'offline',
             prompt: 'consent'
           },
-          redirectTo: '/'
+          // redirectTo: '/'
         }
       });
     } catch (error) {
