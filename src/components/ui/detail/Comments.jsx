@@ -23,7 +23,7 @@ const Comments = ({ id }) => {
     <div
       className={`mt-8 border-t-2 border-[#AAAAAA]  ${
         !isLogin
-          ? 'after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[50%] after:backdrop-blur-[3px]'
+          ? 'after:content-[""] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[calc(100%-350px)] after:backdrop-blur-[3px]'
           : ''
       }`}
     >
