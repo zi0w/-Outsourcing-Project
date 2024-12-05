@@ -1,3 +1,41 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.content-box {
+  box-sizing: content-box;
+}
+
+.black-section-select-design {
+  width: 100%;
+  max-width: 200px;
+  box-sizing: border-box;
+  padding: 10px;
+  border: none;
+  background-color: #1a1a1a;
+  color: white;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 2px 2px 4px #1a1a1a;
+}
+.black-select-design:focus,
+.black-select-design:active {
+  outline: none;
+}
+.white-section-select-design {
+  width: 100%;
+  max-width: 200px;
+  box-sizing: border-box;
+  padding: 10px;
+  border: none;
+  background-color: #fff;
+  color: #111;
+  text-align: center;
+  font-weight: bold;
+  border-radius: 10px;
+  box-shadow: 2px 2px 4px #1a1a1a;
+}
+.white-select-design:focus,
+.white-select-design:active {
+  outline: none;
+}

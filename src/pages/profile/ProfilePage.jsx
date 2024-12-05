@@ -1,9 +1,7 @@
+import Profile from '../../components/ui/profile/Profile';
+
 const ProfilePage = () => {
-  return (
-    <div>
-      <h1>ProfilePage</h1>
-    </div>
-  );
+  return <Profile />;
 };
 
 export default ProfilePage;
