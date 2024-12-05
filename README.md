@@ -1,7 +1,7 @@
 # 🍴welcome to 이븐한맛집🍴
 
 ### 흑백요리사 맛집 리스트와 식당 위치 기반 지도 서비스를 지원하는 서비스 프로젝트
-배포 링크: [https://outsourcing-project-eight.vercel.app/](https://outsourcing-project-eight.vercel.app/)
+배포 링크: [https://outsourcing-project-dun.vercel.app/](https://outsourcing-project-dun.vercel.app/)
 
 <br />
 
