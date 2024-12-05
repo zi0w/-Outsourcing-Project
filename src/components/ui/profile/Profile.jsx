@@ -24,7 +24,7 @@ const Profile = () => {
 
   const { comments, commentsPending, commentsError } = useFetchComments(user.id); // 리뷰 상태 불러오기
 
-  const { handleSubmit } = useUpdateProfile(newNickname, newProfileImg, user);
+  const { handleSubmit } = useUpdateProfile(newNickname, setNewNickname, newProfileImg, user);
 
   return (
     // 유저 프로필 정보
