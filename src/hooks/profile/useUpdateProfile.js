@@ -72,7 +72,7 @@ export const useUpdateProfile = (newNickname, setNewNickname, newProfileImg, use
         setNewNickname('');
       }
     },
-    [newNickname, updateUserInfo, user.id]
+    [newNickname, updateUserInfo, user.id, setNewNickname]
   );
 
   return { handleSubmit };
